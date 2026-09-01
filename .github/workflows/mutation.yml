@@ -31,12 +31,6 @@ permissions:
 jobs:
   gremlins:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ matrix.timeout }}
-    continue-on-error: ${{ matrix.suite == 'heavy' }}
-    if: >
-      (github.event_name == 'schedule' && matrix.suite == 'nightly') ||
-      (github.event_name == 'workflow_dispatch' &&
-        (github.event.inputs.suite == 'all' || github.event.inputs.suite == matrix.suite))
     strategy:
       fail-fast: false
       matrix:
@@ -159,6 +153,10 @@ jobs:
             suite: heavy
             timeout: 45
           # tgbot (esp. tgbot_router.go) is too large for a 90m shard; skip until split further.
+
+    timeout-minutes: ${{ matrix.timeout }}
+    continue-on-error: ${{ matrix.suite == 'heavy' }}
+    if: ${{ (github.event_name == 'schedule' && matrix.suite == 'nightly') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.suite == 'all' || github.event.inputs.suite == matrix.suite)) }}
 
     steps:
       - uses: actions/checkout@v7
