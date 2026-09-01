@@ -1,13 +1,29 @@
 name: Mutation testing
 
-# Mutation testing (gremlins) is the objective check for "fake" tests: it mutates the
-# source and a surviving (LIVED) mutant means no test caught the change. It is SLOW, so it
-# runs nightly / on demand and scoped per package — never per-commit. It is informational:
-# no thresholds are set, so it reports survivors as artifacts without failing the build.
+# Mutation testing (gremlins) is the objective check for "fake" tests: it mutates
+# the source and a surviving (LIVED) mutant means no test caught the change.
+# It is SLOW and informational — no thresholds, never a merge gate.
+#
+# Nightly (schedule) only runs packages that finished in <30m on the first run.
+# Heavy packages (sub, service) are split by file and only run on workflow_dispatch
+# so they cannot burn 2h of private-repo minutes every night.
 on:
   schedule:
-    - cron: "0 3 * * *" # 03:00 UTC daily
+    - cron: "0 3 * * *" # 03:00 UTC daily — nightly suite only
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Which package set to mutate
+        type: choice
+        default: nightly
+        options:
+          - nightly
+          - heavy
+          - all
+
+concurrency:
+  group: mutation-testing
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -15,26 +31,135 @@ permissions:
 jobs:
   gremlins:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: ${{ matrix.timeout }}
+    continue-on-error: ${{ matrix.suite == 'heavy' }}
+    if: >
+      (github.event_name == 'schedule' && matrix.suite == 'nightly') ||
+      (github.event_name == 'workflow_dispatch' &&
+        (github.event.inputs.suite == 'all' || github.event.inputs.suite == matrix.suite))
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: sub
-            path: ./internal/sub/
-            exclude: ""
-          - name: runtime
-            path: ./internal/web/runtime/
-            exclude: ""
+          # --- nightly: proven to finish (1m / 7m / 20m) ---
           - name: link
             path: ./internal/util/link/
+            keep: ""
             exclude: ""
+            suite: nightly
+            timeout: 30
+          - name: runtime
+            path: ./internal/web/runtime/
+            keep: ""
+            exclude: ""
+            suite: nightly
+            timeout: 30
           - name: database
             path: ./internal/database/
-            exclude: 'dump_sqlite\.go'
-          - name: service
+            keep: ""
+            exclude: "/dump_sqlite\\.go$"
+            suite: nightly
+            timeout: 40
+
+          # --- heavy: sub, split so each shard can finish ---
+          - name: sub-service
+            path: ./internal/sub/
+            keep: "service.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: sub-clash-json
+            path: ./internal/sub/
+            keep: "clash_service.go json_service.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: sub-controller-vars
+            path: ./internal/sub/
+            keep: "controller.go remark_vars.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: sub-rest
+            path: ./internal/sub/
+            keep: "clash_external.go clash_yaml.go dist.go endpoint.go external_config.go external_subscription.go forwarded_trust.go host_sub.go links.go placeholders.go remote_routing.go sub.go vless_route.go"
+            exclude: ""
+            suite: heavy
+            timeout: 60
+
+          # --- heavy: service parent package, split by file group ---
+          # keep= restricts mutants to those basenames, so email/tgbot/etc. subpackages
+          # are not pulled in (that is what made the unsplit job hit the 2h cap).
+          - name: service-client-apply
             path: ./internal/web/service/
-            exclude: 'server\.go|xray\.go|inbound\.go|client_bulk\.go|inbound_traffic\.go|.*_postgres_test\.go'
+            keep: "client_inbound_apply.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-client-crud
+            path: ./internal/web/service/
+            keep: "client_crud.go client_paging.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-client-rest
+            path: ./internal/web/service/
+            keep: "client.go client_amneziawg.go client_external_link.go client_groups.go client_hwid.go client_link.go client_locks.go client_lookup.go client_portable.go client_sync_orphan.go client_traffic.go client_wireguard.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-inbound-node
+            path: ./internal/web/service/
+            keep: "inbound_node.go inbound_node_ips.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-inbound-rest
+            path: ./internal/web/service/
+            keep: "inbound_amneziawg.go inbound_client_ips.go inbound_clients.go inbound_disable.go inbound_flow_restore.go inbound_migration.go inbound_mtproto.go inbound_protocol.go inbound_settings_clients.go inbound_sublink.go inbound_traffic_apply.go inbound_traffic_global.go inbound_util.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-node-setting
+            path: ./internal/web/service/
+            keep: "node.go node_contract.go node_mtls.go node_tree.go setting.go setting_mtls.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+          - name: service-rest
+            path: ./internal/web/service/
+            keep: "calendar_renew.go fallback.go geodata.go host.go metric_history.go outbound_subscription.go port_conflict.go reality_scan.go sub_balancer.go traffic_writer.go url_safety.go xray_metrics.go xray_setting.go xray_setting_dns_routing.go xray_setting_routing_sync.go"
+            exclude: ""
+            suite: heavy
+            timeout: 90
+
+          # --- heavy: service subpackages (own test binaries, run separately) ---
+          - name: service-email
+            path: ./internal/web/service/email/
+            keep: ""
+            exclude: ""
+            suite: heavy
+            timeout: 45
+          - name: service-outbound
+            path: ./internal/web/service/outbound/
+            keep: ""
+            exclude: ""
+            suite: heavy
+            timeout: 45
+          - name: service-panel
+            path: ./internal/web/service/panel/
+            keep: ""
+            exclude: ""
+            suite: heavy
+            timeout: 45
+          - name: service-integration
+            path: ./internal/web/service/integration/
+            keep: ""
+            exclude: ""
+            suite: heavy
+            timeout: 45
+          # tgbot (esp. tgbot_router.go) is too large for a 90m shard; skip until split further.
+
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
@@ -46,17 +171,76 @@ jobs:
       - name: Install gremlins
         run: go install github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0
       - name: Run gremlins on ${{ matrix.name }}
+        env:
+          PKG: ${{ matrix.path }}
+          KEEP: ${{ matrix.keep }}
+          EXCLUDE: ${{ matrix.exclude }}
+          OUT: mutation-${{ matrix.name }}.json
         run: |
-          OUT="mutation-${{ matrix.name }}.json"
-          if [ -n "${{ matrix.exclude }}" ]; then
-            gremlins unleash -E '${{ matrix.exclude }}' -o "$OUT" ${{ matrix.path }}
-          else
-            gremlins unleash -o "$OUT" ${{ matrix.path }}
+          set -euo pipefail
+          args=()
+          if [ -n "${EXCLUDE}" ]; then
+            args+=(-E "${EXCLUDE}")
           fi
+          if [ -n "${KEEP}" ]; then
+            keep_re="$(
+              printf '%s\n' ${KEEP} | sed 's/\./\\./g' | paste -sd'|' -
+            )"
+            keep_re="(${keep_re})$"
+            names=()
+            while IFS= read -r f; do
+              base="${f##*/}"
+              if ! printf '%s' "${base}" | grep -Eq "${keep_re}"; then
+                names+=("$(printf '%s' "${base}" | sed 's/\./\\./g')")
+              fi
+            done < <(find "${PKG}" -name '*.go' ! -name '*_test.go' -type f)
+            if [ "${#names[@]}" -gt 0 ]; then
+              uniq=$(printf '%s\n' "${names[@]}" | sort -u | paste -sd'|' -)
+              args+=(-E "/(${uniq})$")
+            fi
+          fi
+          echo "gremlins unleash ${args[*]} --workers 4 -o ${OUT} ${PKG}"
+          gremlins unleash "${args[@]}" --workers 4 -o "${OUT}" "${PKG}"
+      - name: Mutation summary
+        if: always()
+        env:
+          OUT: mutation-${{ matrix.name }}.json
+          JOB: ${{ matrix.name }}
+          PKG: ${{ matrix.path }}
+        run: |
+          {
+            echo "## Mutation: ${JOB}"
+            echo ""
+            echo "- path: \`${PKG}\`"
+            echo ""
+            if [ ! -f "${OUT}" ]; then
+              echo "_No report written (timed out, cancelled, or gremlins failed before output)._"
+              exit 0
+            fi
+            jq -r '
+              "- **efficacy:** \(.test_efficacy | floor)%",
+              "- **coverage:** \(.mutations_coverage | floor)%",
+              "- killed: \(.mutants_killed) · lived: \(.mutants_lived) · not covered: \(.mutants_not_covered) · not viable: \(.mutants_not_viable)",
+              "- elapsed: \(.elapsed_time | floor)s",
+              "",
+              "### Lived mutants",
+              (
+                [.files[] as $f | $f.mutations[] | select(.status == "LIVED") |
+                  "- \`\($f.file_name | split("/") | .[-2:] | join("/")):\(.line):\(.column)\` \(.type)"
+                ] as $lived |
+                if ($lived | length) == 0 then ["_none_"]
+                elif ($lived | length) > 40 then $lived[:40] + ["- … \(($lived | length) - 40) more"]
+                else $lived
+                end | .[]
+              )
+            ' "${OUT}"
+          } >> "${GITHUB_STEP_SUMMARY}"
       - name: Upload mutation report
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
           name: mutation-${{ matrix.name }}
           path: mutation-${{ matrix.name }}.json
           if-no-files-found: ignore
+          retention-days: 5
