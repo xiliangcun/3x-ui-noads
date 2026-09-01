@@ -65,7 +65,6 @@ jobs:
     if: >
       github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.suite == 'heavy' || github.event.inputs.suite == 'all')
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -153,3 +152,4 @@ jobs:
       keep: ${{ matrix.keep }}
       exclude: ${{ matrix.exclude }}
       timeout: ${{ matrix.timeout }}
+      continue_on_error: true

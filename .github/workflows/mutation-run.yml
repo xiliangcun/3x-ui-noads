@@ -21,6 +21,10 @@ on:
       timeout:
         type: number
         required: true
+      continue_on_error:
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -29,6 +33,7 @@ jobs:
   gremlins:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.timeout }}
+    continue-on-error: ${{ inputs.continue_on_error }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
