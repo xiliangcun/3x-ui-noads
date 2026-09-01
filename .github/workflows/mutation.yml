@@ -7,6 +7,8 @@ name: Mutation testing
 # Nightly (schedule) only runs packages that finished in <30m on the first run.
 # Heavy packages (sub, service) are split by file and only run on workflow_dispatch
 # so they cannot burn 2h of private-repo minutes every night.
+#
+# Manual: Actions → Mutation testing → Run workflow → suite nightly | heavy | all
 on:
   schedule:
     - cron: "0 3 * * *" # 03:00 UTC daily — nightly suite only
@@ -30,6 +32,7 @@ permissions:
 
 jobs:
   nightly:
+    name: ${{ matrix.name }}
     if: >
       github.event_name == 'schedule' ||
       (github.event_name == 'workflow_dispatch' &&
@@ -62,6 +65,7 @@ jobs:
       timeout: ${{ matrix.timeout }}
 
   heavy:
+    name: ${{ matrix.name }}
     if: >
       github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.suite == 'heavy' || github.event.inputs.suite == 'all')
