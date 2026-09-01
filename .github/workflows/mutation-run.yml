@@ -1,0 +1,113 @@
+name: Mutation run
+
+# Called by mutation.yml. Not runnable on its own.
+on:
+  workflow_call:
+    inputs:
+      name:
+        type: string
+        required: true
+      path:
+        type: string
+        required: true
+      keep:
+        type: string
+        required: false
+        default: ""
+      exclude:
+        type: string
+        required: false
+        default: ""
+      timeout:
+        type: number
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  gremlins:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Stub internal/web/dist for go:embed
+        run: mkdir -p internal/web/dist && touch internal/web/dist/.gitkeep
+      - name: Install gremlins
+        run: go install github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0
+      - name: Run gremlins on ${{ inputs.name }}
+        env:
+          PKG: ${{ inputs.path }}
+          KEEP: ${{ inputs.keep }}
+          EXCLUDE: ${{ inputs.exclude }}
+          OUT: mutation-${{ inputs.name }}.json
+        run: |
+          set -euo pipefail
+          args=()
+          if [ -n "${EXCLUDE}" ]; then
+            args+=(-E "${EXCLUDE}")
+          fi
+          if [ -n "${KEEP}" ]; then
+            keep_re="$(printf '%s\n' ${KEEP} | sed 's/\./\\./g' | paste -sd'|' -)"
+            keep_re="^(${keep_re})$"
+            names=()
+            while IFS= read -r f; do
+              base="${f##*/}"
+              if ! printf '%s' "${base}" | grep -Eq "${keep_re}"; then
+                names+=("$(printf '%s' "${base}" | sed 's/\./\\./g')")
+              fi
+            done < <(find "${PKG}" -name '*.go' ! -name '*_test.go' -type f)
+            if [ "${#names[@]}" -gt 0 ]; then
+              uniq=$(printf '%s\n' "${names[@]}" | sort -u | paste -sd'|' -)
+              args+=(-E "/(${uniq})$")
+            fi
+          fi
+          echo "gremlins unleash ${args[*]} --workers 4 -o ${OUT} ${PKG}"
+          gremlins unleash "${args[@]}" --workers 4 -o "${OUT}" "${PKG}"
+      - name: Mutation summary
+        if: always()
+        env:
+          OUT: mutation-${{ inputs.name }}.json
+          JOB: ${{ inputs.name }}
+          PKG: ${{ inputs.path }}
+        run: |
+          {
+            echo "## Mutation: ${JOB}"
+            echo ""
+            echo "- path: \`${PKG}\`"
+            echo ""
+            if [ ! -f "${OUT}" ]; then
+              echo "_No report written (timed out, cancelled, or gremlins failed before output)._"
+              exit 0
+            fi
+            jq -r '
+              "- **efficacy:** \(.test_efficacy | floor)%",
+              "- **coverage:** \(.mutations_coverage | floor)%",
+              "- killed: \(.mutants_killed) · lived: \(.mutants_lived) · not covered: \(.mutants_not_covered) · not viable: \(.mutants_not_viable)",
+              "- elapsed: \(.elapsed_time | floor)s",
+              "",
+              "### Lived mutants",
+              (
+                [.files[] as $f | $f.mutations[] | select(.status == "LIVED") |
+                  "- `\($f.file_name | split("/") | .[-2:] | join("/")):\(.line):\(.column)` \(.type)"
+                ] as $lived |
+                if ($lived | length) == 0 then ["_none_"]
+                elif ($lived | length) > 40 then $lived[:40] + ["- … \(($lived | length) - 40) more"]
+                else $lived
+                end | .[]
+              )
+            ' "${OUT}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+      - name: Upload mutation report
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-${{ inputs.name }}
+          path: mutation-${{ inputs.name }}.json
+          if-no-files-found: ignore
+          retention-days: 5
