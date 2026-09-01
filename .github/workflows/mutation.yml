@@ -57,7 +57,7 @@ jobs:
           - name: database
             path: ./internal/database/
             keep: ""
-            exclude: "/dump_sqlite\\.go$"
+            exclude: '/dump_sqlite\.go$'
             suite: nightly
             timeout: 40
 
@@ -183,10 +183,8 @@ jobs:
             args+=(-E "${EXCLUDE}")
           fi
           if [ -n "${KEEP}" ]; then
-            keep_re="$(
-              printf '%s\n' ${KEEP} | sed 's/\./\\./g' | paste -sd'|' -
-            )"
-            keep_re="(${keep_re})$"
+            keep_re="$(printf '%s\n' ${KEEP} | sed 's/\./\\./g' | paste -sd'|' -)"
+            keep_re="^(${keep_re})$"
             names=()
             while IFS= read -r f; do
               base="${f##*/}"
@@ -226,7 +224,7 @@ jobs:
               "### Lived mutants",
               (
                 [.files[] as $f | $f.mutations[] | select(.status == "LIVED") |
-                  "- \`\($f.file_name | split("/") | .[-2:] | join("/")):\(.line):\(.column)\` \(.type)"
+                  "- `\($f.file_name | split("/") | .[-2:] | join("/")):\(.line):\(.column)` \(.type)"
                 ] as $lived |
                 if ($lived | length) == 0 then ["_none_"]
                 elif ($lived | length) > 40 then $lived[:40] + ["- … \(($lived | length) - 40) more"]
