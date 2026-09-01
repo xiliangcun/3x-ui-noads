@@ -29,3 +29,26 @@ jobs:
             done
             echo "Old caches deleted successfully."
           fi
+
+      # Artifact storage is account-wide for private repos (Free ~500MB / Pro ~1GB)
+      # and is what failed Mutation testing #1 with "Artifact storage quota has been hit".
+      - name: Delete artifacts older than 3 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CUTOFF_DATE=$(date -d "3 days ago" -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "Deleting artifacts created before: $CUTOFF_DATE"
+
+          ARTIFACT_IDS=$(gh api --paginate "repos/${{ github.repository }}/actions/artifacts?per_page=100" \
+            --jq ".artifacts[] | select(.created_at < \"$CUTOFF_DATE\") | .id" 2>/dev/null || true)
+
+          if [ -z "$ARTIFACT_IDS" ]; then
+            echo "No old artifacts found to delete."
+          else
+            echo "$ARTIFACT_IDS" | while read -r ARTIFACT_ID; do
+              [ -z "$ARTIFACT_ID" ] && continue
+              echo "Deleting artifact: $ARTIFACT_ID"
+              gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}"
+            done
+            echo "Old artifacts deleted successfully."
+          fi
