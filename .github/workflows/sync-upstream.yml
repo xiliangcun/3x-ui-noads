@@ -23,6 +23,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.SYNC_UPSTREAM_TOKEN || github.token }}
 
       - name: Fetch and merge official repository
         shell: bash
@@ -58,4 +59,20 @@ jobs:
             exit 0
           fi
 
+          if git push origin main --follow-tags; then
+            exit 0
+          fi
+
+          # GITHUB_TOKEN cannot create or update workflow files. Drop those
+          # paths and push the rest so the official code still lands.
+          echo "::warning::Push rejected (no workflows permission). Skipping official .github/workflows changes. Set secret SYNC_UPSTREAM_TOKEN to a classic PAT with repo+workflow to sync them too."
+
+          git checkout "$before" -- .github/workflows
+          added="$(git diff --diff-filter=A --name-only "$before" HEAD -- .github/workflows || true)"
+          if [ -n "$added" ]; then
+            # shellcheck disable=SC2086
+            git rm -f $added
+          fi
+          git add -- .github/workflows
+          git commit --amend --no-edit
           git push origin main --follow-tags
