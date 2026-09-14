@@ -448,6 +448,15 @@ func (s *InboundService) autoRenewClients(tx *gorm.DB, mutationBatch *trafficMut
 				continue
 			}
 			at := time.UnixMilli(newExpiryTime)
+			// Inclusive end-of-day expiries share the next billing midnight; snap without
+			// spending an allowance so the first charged step is a full month (#6300).
+			if traffic.ResetDay > 0 {
+				boundary := nextCalendarRenewal(at, traffic.ResetDay, renewLocation)
+				if !at.Before(boundary.Add(-time.Second)) && at.Before(boundary) {
+					at = boundary
+					newExpiryTime = at.UnixMilli()
+				}
+			}
 			renewals := 0
 			for newExpiryTime < now {
 				if traffic.ResetMax > 0 && traffic.ResetCount+renewals >= traffic.ResetMax {
@@ -664,12 +673,17 @@ func (s *InboundService) ResetClientTraffic(id int, clientEmail string) (needRes
 	if err == nil {
 		s.resetMtprotoClientQuota(clientEmail)
 		if resetInbound != nil && resetInbound.NodeID != nil {
-			if rt, rterr := s.runtimeFor(resetInbound); rterr == nil {
-				if e := rt.ResetClientTraffic(context.Background(), resetInbound, clientEmail); e != nil {
+			// Attempted whatever the node's status: nothing replays a reset, so a
+			// node still serving after being marked offline must get it now.
+			if rt, rterr := s.runtimeFor(resetInbound); rterr != nil {
+				logger.Warning("ResetClientTraffic: runtime lookup failed:", rterr)
+			} else {
+				ctx, cancel := nodePushContext()
+				e := rt.ResetClientTraffic(ctx, resetInbound, clientEmail)
+				cancel()
+				if e != nil {
 					logger.Warning("ResetClientTraffic: remote propagation to", rt.Name(), "failed:", e)
 				}
-			} else {
-				logger.Warning("ResetClientTraffic: runtime lookup failed:", rterr)
 			}
 		}
 	}

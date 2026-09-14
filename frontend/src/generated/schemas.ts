@@ -5,6 +5,40 @@ export const SCHEMAS: Record<string, unknown> = {
       "datepicker": {
         "type": "string"
       },
+      "discordAdminIds": {
+        "type": "string"
+      },
+      "discordBotBackup": {
+        "type": "boolean"
+      },
+      "discordBotEnable": {
+        "type": "boolean"
+      },
+      "discordBotToken": {
+        "type": "string"
+      },
+      "discordChannelId": {
+        "type": "string"
+      },
+      "discordCpu": {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "discordEnabledEvents": {
+        "type": "string"
+      },
+      "discordLang": {
+        "type": "string"
+      },
+      "discordMemory": {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "discordRunTime": {
+        "type": "string"
+      },
       "expireDiff": {
         "minimum": 0,
         "type": "integer"
@@ -14,6 +48,9 @@ export const SCHEMAS: Record<string, unknown> = {
       },
       "externalTrafficInformURI": {
         "type": "string"
+      },
+      "happLinkEnable": {
+        "type": "boolean"
       },
       "ipLimitAllowlist": {
         "type": "string"
@@ -97,6 +134,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "integer"
       },
       "panelOutbound": {
+        "type": "string"
+      },
+      "realityScanCandidates": {
         "type": "string"
       },
       "remarkTemplate": {
@@ -191,6 +231,79 @@ export const SCHEMAS: Record<string, unknown> = {
       "subEncrypt": {
         "type": "boolean"
       },
+      "subExpiredTemplate": {
+        "type": "string"
+      },
+      "subHappAlwaysHwid": {
+        "type": "boolean"
+      },
+      "subHappAutoConnect": {
+        "type": "boolean"
+      },
+      "subHappAutoConnectType": {
+        "type": "string"
+      },
+      "subHappAutoDetect": {
+        "description": "Happ client customization settings (app-management / routing / UX).",
+        "type": "boolean"
+      },
+      "subHappColorProfile": {
+        "type": "string"
+      },
+      "subHappExcludeApns": {
+        "type": "boolean"
+      },
+      "subHappExcludeRoutes": {
+        "type": "string"
+      },
+      "subHappFallbackUrl": {
+        "type": "string"
+      },
+      "subHappNewUrl": {
+        "type": "string"
+      },
+      "subHappNoLimit": {
+        "type": "boolean"
+      },
+      "subHappNotificationExpire": {
+        "type": "boolean"
+      },
+      "subHappPerAppList": {
+        "type": "string"
+      },
+      "subHappPerAppMode": {
+        "type": "string"
+      },
+      "subHappPingType": {
+        "type": "string"
+      },
+      "subHappProviderId": {
+        "type": "string"
+      },
+      "subHappSubExpire": {
+        "type": "boolean"
+      },
+      "subHappSubExpireButtonLink": {
+        "type": "string"
+      },
+      "subHappSubInfoButtonLink": {
+        "type": "string"
+      },
+      "subHappSubInfoButtonText": {
+        "type": "string"
+      },
+      "subHappSubInfoColor": {
+        "type": "string"
+      },
+      "subHappSubInfoText": {
+        "type": "string"
+      },
+      "subHappTunMode": {
+        "type": "string"
+      },
+      "subHappTunType": {
+        "type": "string"
+      },
       "subHideSettings": {
         "type": "boolean"
       },
@@ -200,11 +313,17 @@ export const SCHEMAS: Record<string, unknown> = {
       "subIncyRoutingRules": {
         "type": "string"
       },
+      "subInfoNodeEnable": {
+        "type": "boolean"
+      },
       "subJsonAlwaysArray": {
         "type": "boolean"
       },
       "subJsonAutoDetect": {
         "type": "boolean"
+      },
+      "subJsonDns": {
+        "type": "string"
       },
       "subJsonEnable": {
         "type": "boolean"
@@ -219,6 +338,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "subJsonPath": {
+        "type": "string"
+      },
+      "subJsonRoutingRules": {
         "type": "string"
       },
       "subJsonRules": {
@@ -260,6 +382,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "subTitle": {
+        "type": "string"
+      },
+      "subTrafficDepletedTemplate": {
         "type": "string"
       },
       "subURI": {
@@ -351,9 +476,20 @@ export const SCHEMAS: Record<string, unknown> = {
     },
     "required": [
       "datepicker",
+      "discordAdminIds",
+      "discordBotBackup",
+      "discordBotEnable",
+      "discordBotToken",
+      "discordChannelId",
+      "discordCpu",
+      "discordEnabledEvents",
+      "discordLang",
+      "discordMemory",
+      "discordRunTime",
       "expireDiff",
       "externalTrafficInformEnable",
       "externalTrafficInformURI",
+      "happLinkEnable",
       "ipLimitAllowlist",
       "ldapAutoCreate",
       "ldapAutoDelete",
@@ -379,6 +515,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "outboundDownThreshold",
       "pageSize",
       "panelOutbound",
+      "realityScanCandidates",
       "remarkTemplate",
       "restartXrayOnClientDisable",
       "sessionMaxAge",
@@ -407,16 +544,43 @@ export const SCHEMAS: Record<string, unknown> = {
       "subEnable",
       "subEnableRouting",
       "subEncrypt",
+      "subExpiredTemplate",
+      "subHappAlwaysHwid",
+      "subHappAutoConnect",
+      "subHappAutoConnectType",
+      "subHappAutoDetect",
+      "subHappColorProfile",
+      "subHappExcludeApns",
+      "subHappExcludeRoutes",
+      "subHappFallbackUrl",
+      "subHappNewUrl",
+      "subHappNoLimit",
+      "subHappNotificationExpire",
+      "subHappPerAppList",
+      "subHappPerAppMode",
+      "subHappPingType",
+      "subHappProviderId",
+      "subHappSubExpire",
+      "subHappSubExpireButtonLink",
+      "subHappSubInfoButtonLink",
+      "subHappSubInfoButtonText",
+      "subHappSubInfoColor",
+      "subHappSubInfoText",
+      "subHappTunMode",
+      "subHappTunType",
       "subHideSettings",
       "subIncyEnableRouting",
       "subIncyRoutingRules",
+      "subInfoNodeEnable",
       "subJsonAlwaysArray",
       "subJsonAutoDetect",
+      "subJsonDns",
       "subJsonEnable",
       "subJsonFinalMask",
       "subJsonMux",
       "subJsonObservatory",
       "subJsonPath",
+      "subJsonRoutingRules",
       "subJsonRules",
       "subJsonURI",
       "subJsonUserAgentRegex",
@@ -430,6 +594,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "subSupportUrl",
       "subThemeDir",
       "subTitle",
+      "subTrafficDepletedTemplate",
       "subURI",
       "subUpdates",
       "tgBotAPIServer",
@@ -463,6 +628,40 @@ export const SCHEMAS: Record<string, unknown> = {
       "datepicker": {
         "type": "string"
       },
+      "discordAdminIds": {
+        "type": "string"
+      },
+      "discordBotBackup": {
+        "type": "boolean"
+      },
+      "discordBotEnable": {
+        "type": "boolean"
+      },
+      "discordBotToken": {
+        "type": "string"
+      },
+      "discordChannelId": {
+        "type": "string"
+      },
+      "discordCpu": {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "discordEnabledEvents": {
+        "type": "string"
+      },
+      "discordLang": {
+        "type": "string"
+      },
+      "discordMemory": {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "discordRunTime": {
+        "type": "string"
+      },
       "expireDiff": {
         "minimum": 0,
         "type": "integer"
@@ -473,7 +672,13 @@ export const SCHEMAS: Record<string, unknown> = {
       "externalTrafficInformURI": {
         "type": "string"
       },
+      "happLinkEnable": {
+        "type": "boolean"
+      },
       "hasApiToken": {
+        "type": "boolean"
+      },
+      "hasDiscordBotToken": {
         "type": "boolean"
       },
       "hasLdapPassword": {
@@ -578,6 +783,9 @@ export const SCHEMAS: Record<string, unknown> = {
       "panelOutbound": {
         "type": "string"
       },
+      "realityScanCandidates": {
+        "type": "string"
+      },
       "remarkTemplate": {
         "type": "string"
       },
@@ -670,6 +878,79 @@ export const SCHEMAS: Record<string, unknown> = {
       "subEncrypt": {
         "type": "boolean"
       },
+      "subExpiredTemplate": {
+        "type": "string"
+      },
+      "subHappAlwaysHwid": {
+        "type": "boolean"
+      },
+      "subHappAutoConnect": {
+        "type": "boolean"
+      },
+      "subHappAutoConnectType": {
+        "type": "string"
+      },
+      "subHappAutoDetect": {
+        "description": "Happ client customization settings (app-management / routing / UX).",
+        "type": "boolean"
+      },
+      "subHappColorProfile": {
+        "type": "string"
+      },
+      "subHappExcludeApns": {
+        "type": "boolean"
+      },
+      "subHappExcludeRoutes": {
+        "type": "string"
+      },
+      "subHappFallbackUrl": {
+        "type": "string"
+      },
+      "subHappNewUrl": {
+        "type": "string"
+      },
+      "subHappNoLimit": {
+        "type": "boolean"
+      },
+      "subHappNotificationExpire": {
+        "type": "boolean"
+      },
+      "subHappPerAppList": {
+        "type": "string"
+      },
+      "subHappPerAppMode": {
+        "type": "string"
+      },
+      "subHappPingType": {
+        "type": "string"
+      },
+      "subHappProviderId": {
+        "type": "string"
+      },
+      "subHappSubExpire": {
+        "type": "boolean"
+      },
+      "subHappSubExpireButtonLink": {
+        "type": "string"
+      },
+      "subHappSubInfoButtonLink": {
+        "type": "string"
+      },
+      "subHappSubInfoButtonText": {
+        "type": "string"
+      },
+      "subHappSubInfoColor": {
+        "type": "string"
+      },
+      "subHappSubInfoText": {
+        "type": "string"
+      },
+      "subHappTunMode": {
+        "type": "string"
+      },
+      "subHappTunType": {
+        "type": "string"
+      },
       "subHideSettings": {
         "type": "boolean"
       },
@@ -679,11 +960,17 @@ export const SCHEMAS: Record<string, unknown> = {
       "subIncyRoutingRules": {
         "type": "string"
       },
+      "subInfoNodeEnable": {
+        "type": "boolean"
+      },
       "subJsonAlwaysArray": {
         "type": "boolean"
       },
       "subJsonAutoDetect": {
         "type": "boolean"
+      },
+      "subJsonDns": {
+        "type": "string"
       },
       "subJsonEnable": {
         "type": "boolean"
@@ -698,6 +985,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "subJsonPath": {
+        "type": "string"
+      },
+      "subJsonRoutingRules": {
         "type": "string"
       },
       "subJsonRules": {
@@ -739,6 +1029,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "subTitle": {
+        "type": "string"
+      },
+      "subTrafficDepletedTemplate": {
         "type": "string"
       },
       "subURI": {
@@ -830,10 +1123,22 @@ export const SCHEMAS: Record<string, unknown> = {
     },
     "required": [
       "datepicker",
+      "discordAdminIds",
+      "discordBotBackup",
+      "discordBotEnable",
+      "discordBotToken",
+      "discordChannelId",
+      "discordCpu",
+      "discordEnabledEvents",
+      "discordLang",
+      "discordMemory",
+      "discordRunTime",
       "expireDiff",
       "externalTrafficInformEnable",
       "externalTrafficInformURI",
+      "happLinkEnable",
       "hasApiToken",
+      "hasDiscordBotToken",
       "hasLdapPassword",
       "hasNordSecret",
       "hasSmtpPassword",
@@ -865,6 +1170,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "outboundDownThreshold",
       "pageSize",
       "panelOutbound",
+      "realityScanCandidates",
       "remarkTemplate",
       "restartXrayOnClientDisable",
       "sessionMaxAge",
@@ -893,16 +1199,43 @@ export const SCHEMAS: Record<string, unknown> = {
       "subEnable",
       "subEnableRouting",
       "subEncrypt",
+      "subExpiredTemplate",
+      "subHappAlwaysHwid",
+      "subHappAutoConnect",
+      "subHappAutoConnectType",
+      "subHappAutoDetect",
+      "subHappColorProfile",
+      "subHappExcludeApns",
+      "subHappExcludeRoutes",
+      "subHappFallbackUrl",
+      "subHappNewUrl",
+      "subHappNoLimit",
+      "subHappNotificationExpire",
+      "subHappPerAppList",
+      "subHappPerAppMode",
+      "subHappPingType",
+      "subHappProviderId",
+      "subHappSubExpire",
+      "subHappSubExpireButtonLink",
+      "subHappSubInfoButtonLink",
+      "subHappSubInfoButtonText",
+      "subHappSubInfoColor",
+      "subHappSubInfoText",
+      "subHappTunMode",
+      "subHappTunType",
       "subHideSettings",
       "subIncyEnableRouting",
       "subIncyRoutingRules",
+      "subInfoNodeEnable",
       "subJsonAlwaysArray",
       "subJsonAutoDetect",
+      "subJsonDns",
       "subJsonEnable",
       "subJsonFinalMask",
       "subJsonMux",
       "subJsonObservatory",
       "subJsonPath",
+      "subJsonRoutingRules",
       "subJsonRules",
       "subJsonURI",
       "subJsonUserAgentRegex",
@@ -916,6 +1249,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "subSupportUrl",
       "subThemeDir",
       "subTitle",
+      "subTrafficDepletedTemplate",
       "subURI",
       "subUpdates",
       "tgBotAPIServer",
@@ -1121,6 +1455,8 @@ export const SCHEMAS: Record<string, unknown> = {
         "type": "string"
       },
       "keepAlive": {
+        "description": "Seconds between PersistentKeepalive packets; 0 sends none, omit to keep the stored value",
+        "nullable": true,
         "type": "integer"
       },
       "limitIp": {
@@ -1880,6 +2216,18 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "HappLinkResult": {
+    "properties": {
+      "encryptedLink": {
+        "example": "happ://crypt5/example",
+        "type": "string"
+      }
+    },
+    "required": [
+      "encryptedLink"
+    ],
+    "type": "object"
+  },
   "HistoryOfSeeders": {
     "description": "HistoryOfSeeders tracks which database seeders have been executed to prevent re-running.",
     "properties": {
@@ -2246,6 +2594,39 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "HwidSlotStatus": {
+    "description": "HwidSlotStatus is the aggregate device-slot view exposed to subscribers:\ncounters only, no hwid value or hash, no email, no device metadata.",
+    "properties": {
+      "active": {
+        "example": true,
+        "type": "boolean"
+      },
+      "full": {
+        "example": false,
+        "type": "boolean"
+      },
+      "limit": {
+        "example": 2,
+        "type": "integer"
+      },
+      "registered": {
+        "example": 1,
+        "type": "integer"
+      },
+      "remaining": {
+        "example": 1,
+        "type": "integer"
+      }
+    },
+    "required": [
+      "active",
+      "full",
+      "limit",
+      "registered",
+      "remaining"
+    ],
+    "type": "object"
+  },
   "Inbound": {
     "description": "Inbound represents an Xray inbound configuration with traffic statistics and settings.",
     "properties": {
@@ -2325,7 +2706,8 @@ export const SCHEMAS: Record<string, unknown> = {
           "tunnel",
           "tun",
           "mtproto",
-          "amneziawg"
+          "amneziawg",
+          "tuic"
         ],
         "example": "vless",
         "type": "string"
@@ -2350,9 +2732,8 @@ export const SCHEMAS: Record<string, unknown> = {
       "sniffing": {},
       "streamSettings": {},
       "subSortIndex": {
-        "description": "1-based sort order of this inbound's links in subscription output only (lower first; ties by id)",
+        "description": "Sort order of this inbound's links in subscription output only (lower first; negatives allowed; 0/omitted → 1; ties by id)",
         "example": 1,
-        "minimum": 1,
         "type": "integer"
       },
       "tag": {
@@ -2500,6 +2881,9 @@ export const SCHEMAS: Record<string, unknown> = {
       "mtprotoDomain": {
         "type": "string"
       },
+      "network": {
+        "type": "string"
+      },
       "nodeAddress": {
         "description": "Share-host resolution inputs, mirroring the subscription's\nresolveInboundAddress so the clients page renders a node-managed WireGuard\nEndpoint that points at the node, not the master panel. NodeAddress is the\nhosting node's externally reachable address (empty for this panel's own\ninbounds); Listen and ShareAddrStrategy/ShareAddr feed the same\nnode→listen→custom fallback the share/QR links already use.",
         "type": "string"
@@ -2521,6 +2905,9 @@ export const SCHEMAS: Record<string, unknown> = {
         "example": "VLESS-443",
         "type": "string"
       },
+      "security": {
+        "type": "string"
+      },
       "shareAddr": {
         "type": "string"
       },
@@ -2537,6 +2924,14 @@ export const SCHEMAS: Record<string, unknown> = {
       "tlsFlowCapable": {
         "example": true,
         "type": "boolean"
+      },
+      "tuicServer": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TuicServerSettings"
+          }
+        ],
+        "nullable": true
       },
       "wgDns": {
         "type": "string"
@@ -3416,6 +3811,11 @@ export const SCHEMAS: Record<string, unknown> = {
         "example": "h2",
         "type": "string"
       },
+      "certChainBytes": {
+        "description": "CertChainBytes is the sum of DER lengths of the presented peer chain.\nxray-core ML-DSA-65 REALITY needs \u003e= 3500 bytes (constant lives in xray-core).",
+        "example": 3427,
+        "type": "integer"
+      },
       "certChainValid": {
         "description": "CertChainValid ignores the name: a trusted chain presented for other names\nstill has serverNames the panel can offer instead of the failing SNI.",
         "example": true,
@@ -3498,6 +3898,7 @@ export const SCHEMAS: Record<string, unknown> = {
     },
     "required": [
       "alpn",
+      "certChainBytes",
       "certChainValid",
       "certIssuer",
       "certSubject",
@@ -3788,6 +4189,78 @@ export const SCHEMAS: Record<string, unknown> = {
       "IsOutbound",
       "Tag",
       "Up"
+    ],
+    "type": "object"
+  },
+  "TuicClientSettings": {
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "uuid": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "email",
+      "password",
+      "uuid"
+    ],
+    "type": "object"
+  },
+  "TuicServerSettings": {
+    "properties": {
+      "alpn": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "authentication_timeout": {
+        "type": "integer"
+      },
+      "certificate": {
+        "type": "string"
+      },
+      "congestion_control": {
+        "type": "string"
+      },
+      "log_level": {
+        "type": "string"
+      },
+      "max_idle_time": {
+        "type": "integer"
+      },
+      "max_udp_relay_packet_size": {
+        "type": "integer"
+      },
+      "private_key": {
+        "type": "string"
+      },
+      "sni": {
+        "type": "string"
+      },
+      "udp_relay_mode": {
+        "type": "string"
+      },
+      "zero_rtt_handshake": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "alpn",
+      "authentication_timeout",
+      "certificate",
+      "congestion_control",
+      "log_level",
+      "max_idle_time",
+      "max_udp_relay_packet_size",
+      "private_key",
+      "udp_relay_mode",
+      "zero_rtt_handshake"
     ],
     "type": "object"
   },

@@ -46,6 +46,7 @@ export interface Endpoint {
   bodyRequiredOneOf?: string[];
   responseSchema?: string;
   responseSchemaArray?: boolean;
+  responseSchemaArrayNullable?: boolean;
   responseObjectSchema?: Record<string, unknown>;
   responses?: Record<string, Record<string, unknown>>;
   security?: readonly Record<string, readonly string[]>[];
@@ -88,6 +89,14 @@ const outboundSubscriptionBodyParams: EndpointParam[] = [
     type: 'string',
     desc: 'Prefix for generated outbound tags. Defaults to the lowest free "sub<N>-" prefix.',
     optional: true,
+  },
+  {
+    name: 'userAgent',
+    in: 'body (form)',
+    type: 'string',
+    desc: 'Custom User-Agent sent when fetching this subscription. Defaults to "3x-ui-outbound-sub/1.0".',
+    optional: true,
+    defaultValue: '3x-ui-outbound-sub/1.0',
   },
   {
     name: 'updateInterval',
@@ -182,6 +191,11 @@ const subscriptionHeadResponses = {
   '500': { description: 'Subscription generation failed.' },
 };
 
+const hwidStatusErrorResponses = {
+  '404': { description: 'No enabled client matches the subscription ID. Empty body.' },
+  '500': { description: 'Database lookup failed. Empty body.' },
+};
+
 export const sections: readonly Section[] = [
   {
     id: 'authentication',
@@ -265,6 +279,7 @@ export const sections: readonly Section[] = [
       {
         method: 'GET',
         path: '/panel/api/inbounds/allLinks',
+        responseObjectSchema: { type: 'array', nullable: true, items: { type: 'string' } },
         summary:
           'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, mtproto) across all inbounds and all of their clients. Links are rendered through the subscription engine, so the configured remark template (name-only display part) is applied per client — the same output the client info/QR pages use. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing. Used by the panel’s "Export all inbound links" action.',
         response:
@@ -709,7 +724,7 @@ export const sections: readonly Section[] = [
           },
         ],
         body: 'level=info&syslog=false',
-        responseObjectSchema: { type: 'array', items: { type: 'string' } },
+        responseObjectSchema: { type: 'array', nullable: true, items: { type: 'string' } },
         response:
           '{\n  "success": true,\n  "obj": [\n    "2025/01/01 12:00:00 [INFO] Server started",\n    "2025/01/01 12:00:01 [INFO] Xray is running"\n  ]\n}',
       },
@@ -751,6 +766,7 @@ export const sections: readonly Section[] = [
         body: 'filter=error&showDirect=false&showBlocked=true&showProxy=true',
         responseSchema: 'LogEntry',
         responseSchemaArray: true,
+        responseSchemaArrayNullable: true,
       },
       {
         method: 'POST',
@@ -898,14 +914,14 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/server/scanRealityTargets',
         summary:
-          'Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, a built-in seed list is probed.',
+          'Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty).',
         params: [
           {
             name: 'targets',
             in: 'body (form)',
             type: 'string',
             optional: true,
-            desc: 'Optional comma-separated tokens: domain[:port], IP[:port], or CIDR (e.g. 104.16.0.0/24). When omitted, a built-in seed list is probed.',
+            desc: 'Optional comma-separated tokens: domain[:port], IP[:port], or CIDR (e.g. 104.16.0.0/24). When omitted, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty).',
           },
         ],
         body: 'targets=104.16.0.0/24,www.apple.com:443',
@@ -1277,8 +1293,8 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkAdjust',
         summary:
-          'Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: "none" clears it, "xtls-rprx-vision"/"xtls-rprx-vision-udp443" set it where the inbound supports it (omit or "" to leave it unchanged). Returns the adjusted count and per-email skip reasons.',
-        body: '{\n  "emails": ["alice", "bob"],\n  "addDays": 30,\n  "addBytes": 53687091200,\n  "flow": "xtls-rprx-vision"\n}',
+          'Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: "none" clears it, "xtls-rprx-vision"/"xtls-rprx-vision-udp443" set it where the inbound supports it (omit or "" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel ("none" clears). Returns the adjusted count and per-email skip reasons.',
+        body: '{\n  "emails": ["alice", "bob"],\n  "addDays": 30,\n  "addBytes": 53687091200,\n  "flow": "xtls-rprx-vision",\n  "limitHwid": 2,\n  "adTag": "0123456789abcdef0123456789abcdef"\n}',
         response:
           '{\n  "success": true,\n  "obj": {\n    "adjusted": 2,\n    "skipped": [\n      { "email": "carol", "reason": "unlimited expiry" }\n    ]\n  }\n}',
       },
@@ -1467,10 +1483,11 @@ export const sections: readonly Section[] = [
       {
         method: 'POST',
         path: '/panel/api/clients/hwids/:email',
-        summary: 'List registered HWID devices for a client. Hashes are not exposed.',
+        summary:
+          'List registered HWID devices for a client with a short fingerprint. Full hashes are not exposed.',
         params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
         response:
-          '{\n  "success": true,\n  "obj": [\n    {\n      "id": 1,\n      "firstSeen": 1735000000000,\n      "lastSeen": 1735100000000,\n      "userAgent": "Happ/1.0",\n      "deviceOs": "android",\n      "osVersion": "15",\n      "deviceModel": "Pixel 9"\n    }\n  ]\n}',
+          '{\n  "success": true,\n  "obj": [\n    {\n      "id": 1,\n      "firstSeen": 1735000000000,\n      "lastSeen": 1735100000000,\n      "userAgent": "Happ/1.0",\n      "deviceOs": "android",\n      "osVersion": "15",\n      "deviceModel": "Pixel 9",\n      "fingerprint": "6ad17c93e821"\n    }\n  ]\n}',
       },
       {
         method: 'DELETE',
@@ -1558,10 +1575,18 @@ export const sections: readonly Section[] = [
           '{\n  "success": true,\n  "obj": [\n    "vless://uuid@host:443?security=reality&...#user1",\n    "vmess://eyJ2IjoyLC..."\n  ]\n}',
       },
       {
+        method: 'POST',
+        path: '/panel/api/clients/happLink/:id',
+        summary:
+          'Generate a fresh Happ crypt5 link locally from the current client subscription URL when Happ link generation is enabled. The panel applies a resource limit of 8192 UTF-8 bytes to the source URL; this is not a Happ client maximum. Longer sources return success: false with msg: happ_source_too_long and obj: null. The source URL is not sent to a generation provider, and the result is not stored or reused.',
+        params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Stable client record ID.' }],
+        responseSchema: 'HappLinkResult',
+      },
+      {
         method: 'GET',
         path: '/panel/api/clients/links/:email',
         summary:
-          'Return every URL for one client across all attached inbounds — the same strings the Copy URL button copies in the panel UI. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria. If streamSettings.externalProxy is set, returns one URL per external proxy. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.',
+          'Return every URL for one client across all attached inbounds, one per advertised endpoint: the managed hosts of the inbound, else its streamSettings.externalProxy entries, else its own address. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria, mtproto. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.',
         params: [
           { name: 'email', in: 'path', type: 'string', desc: 'Client email (unique identifier).' },
         ],
@@ -1891,6 +1916,12 @@ export const sections: readonly Section[] = [
         path: '/panel/api/setting/testTgBot',
         summary: 'Test Telegram bot connection by sending a test message to the configured chat.',
         response: '{\n  "success": true,\n  "msg": "Test message sent to Telegram"\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/setting/testDiscord',
+        summary: 'Test Discord bot connection by sending a test embed to the configured channel.',
+        response: '{\n  "success": true,\n  "msg": "Test notification sent successfully"\n}',
       },
       {
         method: 'GET',
@@ -2495,6 +2526,13 @@ export const sections: readonly Section[] = [
             desc: 'Subscription URL to preview (required).',
           },
           {
+            name: 'userAgent',
+            in: 'body (form)',
+            type: 'string',
+            desc: 'Custom User-Agent sent while fetching the preview.',
+            optional: true,
+          },
+          {
             name: 'allowPrivate',
             in: 'body (form)',
             type: 'boolean',
@@ -2614,6 +2652,35 @@ export const sections: readonly Section[] = [
           'Return the same status and subscription metadata headers as GET without a response body.',
         params: [{ name: 'subid', in: 'path', type: 'string', desc: 'Client subscription ID.' }],
         responses: subscriptionHeadResponses,
+      },
+      {
+        method: 'GET',
+        path: '/{subPath}:subid/hwid-status',
+        summary:
+          'Return aggregate HWID device-slot usage for the subscription: whether an HWID limit is active, the limit, how many devices are registered and how many slots remain. Read-only — it never registers a device, so asking does not consume a slot. Counters only: no HWID value, email or device metadata. The path prefix is configured by subPath.',
+        description:
+          'Responds with the bare HwidSlotStatus object, not the <code>{success,msg,obj}</code> panel envelope, like the other subscription-server routes. With no HWID limit configured, <code>active</code> is false and every counter is 0.',
+        params: [{ name: 'subid', in: 'path', type: 'string', desc: 'Client subscription ID.' }],
+        responses: {
+          '200': {
+            description: 'Device-slot counters for the subscription.',
+            content: {
+              'application/json': { schema: { $ref: '#/components/schemas/HwidSlotStatus' } },
+            },
+          },
+          ...hwidStatusErrorResponses,
+        },
+      },
+      {
+        method: 'HEAD',
+        path: '/{subPath}:subid/hwid-status',
+        summary:
+          'Return the HWID device-slot status code and headers as GET without a response body.',
+        params: [{ name: 'subid', in: 'path', type: 'string', desc: 'Client subscription ID.' }],
+        responses: {
+          '200': { description: 'Headers match GET; no response body.' },
+          ...hwidStatusErrorResponses,
+        },
       },
       {
         method: 'GET',

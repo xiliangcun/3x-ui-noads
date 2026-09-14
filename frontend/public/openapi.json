@@ -31,6 +31,40 @@
           "datepicker": {
             "type": "string"
           },
+          "discordAdminIds": {
+            "type": "string"
+          },
+          "discordBotBackup": {
+            "type": "boolean"
+          },
+          "discordBotEnable": {
+            "type": "boolean"
+          },
+          "discordBotToken": {
+            "type": "string"
+          },
+          "discordChannelId": {
+            "type": "string"
+          },
+          "discordCpu": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "discordEnabledEvents": {
+            "type": "string"
+          },
+          "discordLang": {
+            "type": "string"
+          },
+          "discordMemory": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "discordRunTime": {
+            "type": "string"
+          },
           "expireDiff": {
             "minimum": 0,
             "type": "integer"
@@ -40,6 +74,9 @@
           },
           "externalTrafficInformURI": {
             "type": "string"
+          },
+          "happLinkEnable": {
+            "type": "boolean"
           },
           "ipLimitAllowlist": {
             "type": "string"
@@ -123,6 +160,9 @@
             "type": "integer"
           },
           "panelOutbound": {
+            "type": "string"
+          },
+          "realityScanCandidates": {
             "type": "string"
           },
           "remarkTemplate": {
@@ -217,6 +257,79 @@
           "subEncrypt": {
             "type": "boolean"
           },
+          "subExpiredTemplate": {
+            "type": "string"
+          },
+          "subHappAlwaysHwid": {
+            "type": "boolean"
+          },
+          "subHappAutoConnect": {
+            "type": "boolean"
+          },
+          "subHappAutoConnectType": {
+            "type": "string"
+          },
+          "subHappAutoDetect": {
+            "description": "Happ client customization settings (app-management / routing / UX).",
+            "type": "boolean"
+          },
+          "subHappColorProfile": {
+            "type": "string"
+          },
+          "subHappExcludeApns": {
+            "type": "boolean"
+          },
+          "subHappExcludeRoutes": {
+            "type": "string"
+          },
+          "subHappFallbackUrl": {
+            "type": "string"
+          },
+          "subHappNewUrl": {
+            "type": "string"
+          },
+          "subHappNoLimit": {
+            "type": "boolean"
+          },
+          "subHappNotificationExpire": {
+            "type": "boolean"
+          },
+          "subHappPerAppList": {
+            "type": "string"
+          },
+          "subHappPerAppMode": {
+            "type": "string"
+          },
+          "subHappPingType": {
+            "type": "string"
+          },
+          "subHappProviderId": {
+            "type": "string"
+          },
+          "subHappSubExpire": {
+            "type": "boolean"
+          },
+          "subHappSubExpireButtonLink": {
+            "type": "string"
+          },
+          "subHappSubInfoButtonLink": {
+            "type": "string"
+          },
+          "subHappSubInfoButtonText": {
+            "type": "string"
+          },
+          "subHappSubInfoColor": {
+            "type": "string"
+          },
+          "subHappSubInfoText": {
+            "type": "string"
+          },
+          "subHappTunMode": {
+            "type": "string"
+          },
+          "subHappTunType": {
+            "type": "string"
+          },
           "subHideSettings": {
             "type": "boolean"
           },
@@ -226,11 +339,17 @@
           "subIncyRoutingRules": {
             "type": "string"
           },
+          "subInfoNodeEnable": {
+            "type": "boolean"
+          },
           "subJsonAlwaysArray": {
             "type": "boolean"
           },
           "subJsonAutoDetect": {
             "type": "boolean"
+          },
+          "subJsonDns": {
+            "type": "string"
           },
           "subJsonEnable": {
             "type": "boolean"
@@ -245,6 +364,9 @@
             "type": "string"
           },
           "subJsonPath": {
+            "type": "string"
+          },
+          "subJsonRoutingRules": {
             "type": "string"
           },
           "subJsonRules": {
@@ -286,6 +408,9 @@
             "type": "string"
           },
           "subTitle": {
+            "type": "string"
+          },
+          "subTrafficDepletedTemplate": {
             "type": "string"
           },
           "subURI": {
@@ -377,9 +502,20 @@
         },
         "required": [
           "datepicker",
+          "discordAdminIds",
+          "discordBotBackup",
+          "discordBotEnable",
+          "discordBotToken",
+          "discordChannelId",
+          "discordCpu",
+          "discordEnabledEvents",
+          "discordLang",
+          "discordMemory",
+          "discordRunTime",
           "expireDiff",
           "externalTrafficInformEnable",
           "externalTrafficInformURI",
+          "happLinkEnable",
           "ipLimitAllowlist",
           "ldapAutoCreate",
           "ldapAutoDelete",
@@ -405,6 +541,7 @@
           "outboundDownThreshold",
           "pageSize",
           "panelOutbound",
+          "realityScanCandidates",
           "remarkTemplate",
           "restartXrayOnClientDisable",
           "sessionMaxAge",
@@ -433,16 +570,43 @@
           "subEnable",
           "subEnableRouting",
           "subEncrypt",
+          "subExpiredTemplate",
+          "subHappAlwaysHwid",
+          "subHappAutoConnect",
+          "subHappAutoConnectType",
+          "subHappAutoDetect",
+          "subHappColorProfile",
+          "subHappExcludeApns",
+          "subHappExcludeRoutes",
+          "subHappFallbackUrl",
+          "subHappNewUrl",
+          "subHappNoLimit",
+          "subHappNotificationExpire",
+          "subHappPerAppList",
+          "subHappPerAppMode",
+          "subHappPingType",
+          "subHappProviderId",
+          "subHappSubExpire",
+          "subHappSubExpireButtonLink",
+          "subHappSubInfoButtonLink",
+          "subHappSubInfoButtonText",
+          "subHappSubInfoColor",
+          "subHappSubInfoText",
+          "subHappTunMode",
+          "subHappTunType",
           "subHideSettings",
           "subIncyEnableRouting",
           "subIncyRoutingRules",
+          "subInfoNodeEnable",
           "subJsonAlwaysArray",
           "subJsonAutoDetect",
+          "subJsonDns",
           "subJsonEnable",
           "subJsonFinalMask",
           "subJsonMux",
           "subJsonObservatory",
           "subJsonPath",
+          "subJsonRoutingRules",
           "subJsonRules",
           "subJsonURI",
           "subJsonUserAgentRegex",
@@ -456,6 +620,7 @@
           "subSupportUrl",
           "subThemeDir",
           "subTitle",
+          "subTrafficDepletedTemplate",
           "subURI",
           "subUpdates",
           "tgBotAPIServer",
@@ -489,6 +654,40 @@
           "datepicker": {
             "type": "string"
           },
+          "discordAdminIds": {
+            "type": "string"
+          },
+          "discordBotBackup": {
+            "type": "boolean"
+          },
+          "discordBotEnable": {
+            "type": "boolean"
+          },
+          "discordBotToken": {
+            "type": "string"
+          },
+          "discordChannelId": {
+            "type": "string"
+          },
+          "discordCpu": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "discordEnabledEvents": {
+            "type": "string"
+          },
+          "discordLang": {
+            "type": "string"
+          },
+          "discordMemory": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "discordRunTime": {
+            "type": "string"
+          },
           "expireDiff": {
             "minimum": 0,
             "type": "integer"
@@ -499,7 +698,13 @@
           "externalTrafficInformURI": {
             "type": "string"
           },
+          "happLinkEnable": {
+            "type": "boolean"
+          },
           "hasApiToken": {
+            "type": "boolean"
+          },
+          "hasDiscordBotToken": {
             "type": "boolean"
           },
           "hasLdapPassword": {
@@ -604,6 +809,9 @@
           "panelOutbound": {
             "type": "string"
           },
+          "realityScanCandidates": {
+            "type": "string"
+          },
           "remarkTemplate": {
             "type": "string"
           },
@@ -696,6 +904,79 @@
           "subEncrypt": {
             "type": "boolean"
           },
+          "subExpiredTemplate": {
+            "type": "string"
+          },
+          "subHappAlwaysHwid": {
+            "type": "boolean"
+          },
+          "subHappAutoConnect": {
+            "type": "boolean"
+          },
+          "subHappAutoConnectType": {
+            "type": "string"
+          },
+          "subHappAutoDetect": {
+            "description": "Happ client customization settings (app-management / routing / UX).",
+            "type": "boolean"
+          },
+          "subHappColorProfile": {
+            "type": "string"
+          },
+          "subHappExcludeApns": {
+            "type": "boolean"
+          },
+          "subHappExcludeRoutes": {
+            "type": "string"
+          },
+          "subHappFallbackUrl": {
+            "type": "string"
+          },
+          "subHappNewUrl": {
+            "type": "string"
+          },
+          "subHappNoLimit": {
+            "type": "boolean"
+          },
+          "subHappNotificationExpire": {
+            "type": "boolean"
+          },
+          "subHappPerAppList": {
+            "type": "string"
+          },
+          "subHappPerAppMode": {
+            "type": "string"
+          },
+          "subHappPingType": {
+            "type": "string"
+          },
+          "subHappProviderId": {
+            "type": "string"
+          },
+          "subHappSubExpire": {
+            "type": "boolean"
+          },
+          "subHappSubExpireButtonLink": {
+            "type": "string"
+          },
+          "subHappSubInfoButtonLink": {
+            "type": "string"
+          },
+          "subHappSubInfoButtonText": {
+            "type": "string"
+          },
+          "subHappSubInfoColor": {
+            "type": "string"
+          },
+          "subHappSubInfoText": {
+            "type": "string"
+          },
+          "subHappTunMode": {
+            "type": "string"
+          },
+          "subHappTunType": {
+            "type": "string"
+          },
           "subHideSettings": {
             "type": "boolean"
           },
@@ -705,11 +986,17 @@
           "subIncyRoutingRules": {
             "type": "string"
           },
+          "subInfoNodeEnable": {
+            "type": "boolean"
+          },
           "subJsonAlwaysArray": {
             "type": "boolean"
           },
           "subJsonAutoDetect": {
             "type": "boolean"
+          },
+          "subJsonDns": {
+            "type": "string"
           },
           "subJsonEnable": {
             "type": "boolean"
@@ -724,6 +1011,9 @@
             "type": "string"
           },
           "subJsonPath": {
+            "type": "string"
+          },
+          "subJsonRoutingRules": {
             "type": "string"
           },
           "subJsonRules": {
@@ -765,6 +1055,9 @@
             "type": "string"
           },
           "subTitle": {
+            "type": "string"
+          },
+          "subTrafficDepletedTemplate": {
             "type": "string"
           },
           "subURI": {
@@ -856,10 +1149,22 @@
         },
         "required": [
           "datepicker",
+          "discordAdminIds",
+          "discordBotBackup",
+          "discordBotEnable",
+          "discordBotToken",
+          "discordChannelId",
+          "discordCpu",
+          "discordEnabledEvents",
+          "discordLang",
+          "discordMemory",
+          "discordRunTime",
           "expireDiff",
           "externalTrafficInformEnable",
           "externalTrafficInformURI",
+          "happLinkEnable",
           "hasApiToken",
+          "hasDiscordBotToken",
           "hasLdapPassword",
           "hasNordSecret",
           "hasSmtpPassword",
@@ -891,6 +1196,7 @@
           "outboundDownThreshold",
           "pageSize",
           "panelOutbound",
+          "realityScanCandidates",
           "remarkTemplate",
           "restartXrayOnClientDisable",
           "sessionMaxAge",
@@ -919,16 +1225,43 @@
           "subEnable",
           "subEnableRouting",
           "subEncrypt",
+          "subExpiredTemplate",
+          "subHappAlwaysHwid",
+          "subHappAutoConnect",
+          "subHappAutoConnectType",
+          "subHappAutoDetect",
+          "subHappColorProfile",
+          "subHappExcludeApns",
+          "subHappExcludeRoutes",
+          "subHappFallbackUrl",
+          "subHappNewUrl",
+          "subHappNoLimit",
+          "subHappNotificationExpire",
+          "subHappPerAppList",
+          "subHappPerAppMode",
+          "subHappPingType",
+          "subHappProviderId",
+          "subHappSubExpire",
+          "subHappSubExpireButtonLink",
+          "subHappSubInfoButtonLink",
+          "subHappSubInfoButtonText",
+          "subHappSubInfoColor",
+          "subHappSubInfoText",
+          "subHappTunMode",
+          "subHappTunType",
           "subHideSettings",
           "subIncyEnableRouting",
           "subIncyRoutingRules",
+          "subInfoNodeEnable",
           "subJsonAlwaysArray",
           "subJsonAutoDetect",
+          "subJsonDns",
           "subJsonEnable",
           "subJsonFinalMask",
           "subJsonMux",
           "subJsonObservatory",
           "subJsonPath",
+          "subJsonRoutingRules",
           "subJsonRules",
           "subJsonURI",
           "subJsonUserAgentRegex",
@@ -942,6 +1275,7 @@
           "subSupportUrl",
           "subThemeDir",
           "subTitle",
+          "subTrafficDepletedTemplate",
           "subURI",
           "subUpdates",
           "tgBotAPIServer",
@@ -1147,6 +1481,8 @@
             "type": "string"
           },
           "keepAlive": {
+            "description": "Seconds between PersistentKeepalive packets; 0 sends none, omit to keep the stored value",
+            "nullable": true,
             "type": "integer"
           },
           "limitIp": {
@@ -1906,6 +2242,18 @@
         ],
         "type": "object"
       },
+      "HappLinkResult": {
+        "properties": {
+          "encryptedLink": {
+            "example": "happ://crypt5/example",
+            "type": "string"
+          }
+        },
+        "required": [
+          "encryptedLink"
+        ],
+        "type": "object"
+      },
       "HistoryOfSeeders": {
         "description": "HistoryOfSeeders tracks which database seeders have been executed to prevent re-running.",
         "properties": {
@@ -2272,6 +2620,39 @@
         ],
         "type": "object"
       },
+      "HwidSlotStatus": {
+        "description": "HwidSlotStatus is the aggregate device-slot view exposed to subscribers:\ncounters only, no hwid value or hash, no email, no device metadata.",
+        "properties": {
+          "active": {
+            "example": true,
+            "type": "boolean"
+          },
+          "full": {
+            "example": false,
+            "type": "boolean"
+          },
+          "limit": {
+            "example": 2,
+            "type": "integer"
+          },
+          "registered": {
+            "example": 1,
+            "type": "integer"
+          },
+          "remaining": {
+            "example": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "active",
+          "full",
+          "limit",
+          "registered",
+          "remaining"
+        ],
+        "type": "object"
+      },
       "Inbound": {
         "description": "Inbound represents an Xray inbound configuration with traffic statistics and settings.",
         "properties": {
@@ -2351,7 +2732,8 @@
               "tunnel",
               "tun",
               "mtproto",
-              "amneziawg"
+              "amneziawg",
+              "tuic"
             ],
             "example": "vless",
             "type": "string"
@@ -2376,9 +2758,8 @@
           "sniffing": {},
           "streamSettings": {},
           "subSortIndex": {
-            "description": "1-based sort order of this inbound's links in subscription output only (lower first; ties by id)",
+            "description": "Sort order of this inbound's links in subscription output only (lower first; negatives allowed; 0/omitted → 1; ties by id)",
             "example": 1,
-            "minimum": 1,
             "type": "integer"
           },
           "tag": {
@@ -2526,6 +2907,9 @@
           "mtprotoDomain": {
             "type": "string"
           },
+          "network": {
+            "type": "string"
+          },
           "nodeAddress": {
             "description": "Share-host resolution inputs, mirroring the subscription's\nresolveInboundAddress so the clients page renders a node-managed WireGuard\nEndpoint that points at the node, not the master panel. NodeAddress is the\nhosting node's externally reachable address (empty for this panel's own\ninbounds); Listen and ShareAddrStrategy/ShareAddr feed the same\nnode→listen→custom fallback the share/QR links already use.",
             "type": "string"
@@ -2547,6 +2931,9 @@
             "example": "VLESS-443",
             "type": "string"
           },
+          "security": {
+            "type": "string"
+          },
           "shareAddr": {
             "type": "string"
           },
@@ -2563,6 +2950,14 @@
           "tlsFlowCapable": {
             "example": true,
             "type": "boolean"
+          },
+          "tuicServer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TuicServerSettings"
+              }
+            ],
+            "nullable": true
           },
           "wgDns": {
             "type": "string"
@@ -3442,6 +3837,11 @@
             "example": "h2",
             "type": "string"
           },
+          "certChainBytes": {
+            "description": "CertChainBytes is the sum of DER lengths of the presented peer chain.\nxray-core ML-DSA-65 REALITY needs >= 3500 bytes (constant lives in xray-core).",
+            "example": 3427,
+            "type": "integer"
+          },
           "certChainValid": {
             "description": "CertChainValid ignores the name: a trusted chain presented for other names\nstill has serverNames the panel can offer instead of the failing SNI.",
             "example": true,
@@ -3524,6 +3924,7 @@
         },
         "required": [
           "alpn",
+          "certChainBytes",
           "certChainValid",
           "certIssuer",
           "certSubject",
@@ -3814,6 +4215,78 @@
           "IsOutbound",
           "Tag",
           "Up"
+        ],
+        "type": "object"
+      },
+      "TuicClientSettings": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "uuid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "uuid"
+        ],
+        "type": "object"
+      },
+      "TuicServerSettings": {
+        "properties": {
+          "alpn": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "authentication_timeout": {
+            "type": "integer"
+          },
+          "certificate": {
+            "type": "string"
+          },
+          "congestion_control": {
+            "type": "string"
+          },
+          "log_level": {
+            "type": "string"
+          },
+          "max_idle_time": {
+            "type": "integer"
+          },
+          "max_udp_relay_packet_size": {
+            "type": "integer"
+          },
+          "private_key": {
+            "type": "string"
+          },
+          "sni": {
+            "type": "string"
+          },
+          "udp_relay_mode": {
+            "type": "string"
+          },
+          "zero_rtt_handshake": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "alpn",
+          "authentication_timeout",
+          "certificate",
+          "congestion_control",
+          "log_level",
+          "max_idle_time",
+          "max_udp_relay_packet_size",
+          "private_key",
+          "udp_relay_mode",
+          "zero_rtt_handshake"
         ],
         "type": "object"
       },
@@ -4297,16 +4770,19 @@
                       "id": 1,
                       "listen": "",
                       "mtprotoDomain": "",
+                      "network": "",
                       "nodeAddress": "",
                       "nodeId": null,
                       "port": 443,
                       "protocol": "vless",
                       "remark": "VLESS-443",
+                      "security": "",
                       "shareAddr": "",
                       "shareAddrStrategy": "",
                       "ssMethod": "",
                       "tag": "in-443-tcp",
                       "tlsFlowCapable": true,
+                      "tuicServer": null,
                       "wgDns": "",
                       "wgMtu": 0,
                       "wgPublicKey": ""
@@ -4340,7 +4816,13 @@
                     "msg": {
                       "type": "string"
                     },
-                    "obj": {}
+                    "obj": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 },
                 "example": {
@@ -6399,6 +6881,7 @@
                     },
                     "obj": {
                       "type": "array",
+                      "nullable": true,
                       "items": {
                         "type": "string"
                       }
@@ -6480,6 +6963,7 @@
                     },
                     "obj": {
                       "type": "array",
+                      "nullable": true,
                       "items": {
                         "$ref": "#/components/schemas/LogEntry"
                       }
@@ -6889,6 +7373,7 @@
                   "success": true,
                   "obj": {
                     "alpn": "h2",
+                    "certChainBytes": 3427,
                     "certChainValid": true,
                     "certIssuer": "Google Trust Services",
                     "certSubject": "cloudflare.com",
@@ -6923,7 +7408,7 @@
         "tags": [
           "Server"
         ],
-        "summary": "Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, a built-in seed list is probed.",
+        "summary": "Probe/discover REALITY targets and return each verdict ranked by feasibility then latency. Each comma-separated token may be a domain (validated with SNI), a bare IP, or a CIDR range (discovered without SNI by reading the certificate domain). When empty, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty).",
         "operationId": "post_panel_api_server_scanRealityTargets",
         "requestBody": {
           "required": false,
@@ -6934,7 +7419,7 @@
                 "properties": {
                   "targets": {
                     "type": "string",
-                    "description": "Optional comma-separated tokens: domain[:port], IP[:port], or CIDR (e.g. 104.16.0.0/24). When omitted, a built-in seed list is probed."
+                    "description": "Optional comma-separated tokens: domain[:port], IP[:port], or CIDR (e.g. 104.16.0.0/24). When omitted, the realityScanCandidates setting is probed (the built-in seed list if that setting is empty)."
                   }
                 }
               }
@@ -6968,6 +7453,7 @@
                   "obj": [
                     {
                       "alpn": "h2",
+                      "certChainBytes": 3427,
                       "certChainValid": true,
                       "certIssuer": "Google Trust Services",
                       "certSubject": "cloudflare.com",
@@ -8148,7 +8634,7 @@
         "tags": [
           "Clients"
         ],
-        "summary": "Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: \"none\" clears it, \"xtls-rprx-vision\"/\"xtls-rprx-vision-udp443\" set it where the inbound supports it (omit or \"\" to leave it unchanged). Returns the adjusted count and per-email skip reasons.",
+        "summary": "Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: \"none\" clears it, \"xtls-rprx-vision\"/\"xtls-rprx-vision-udp443\" set it where the inbound supports it (omit or \"\" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel (\"none\" clears). Returns the adjusted count and per-email skip reasons.",
         "operationId": "post_panel_api_clients_bulkAdjust",
         "requestBody": {
           "required": true,
@@ -8164,7 +8650,9 @@
                 ],
                 "addDays": 30,
                 "addBytes": 53687091200,
-                "flow": "xtls-rprx-vision"
+                "flow": "xtls-rprx-vision",
+                "limitHwid": 2,
+                "adTag": "0123456789abcdef0123456789abcdef"
               }
             }
           }
@@ -9251,7 +9739,7 @@
         "tags": [
           "Clients"
         ],
-        "summary": "List registered HWID devices for a client. Hashes are not exposed.",
+        "summary": "List registered HWID devices for a client with a short fingerprint. Full hashes are not exposed.",
         "operationId": "post_panel_api_clients_hwids_email",
         "parameters": [
           {
@@ -9291,7 +9779,8 @@
                       "userAgent": "Happ/1.0",
                       "deviceOs": "android",
                       "osVersion": "15",
-                      "deviceModel": "Pixel 9"
+                      "deviceModel": "Pixel 9",
+                      "fingerprint": "6ad17c93e821"
                     }
                   ]
                 }
@@ -9700,12 +10189,61 @@
         }
       }
     },
+    "/panel/api/clients/happLink/{id}": {
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Generate a fresh Happ crypt5 link locally from the current client subscription URL when Happ link generation is enabled. The panel applies a resource limit of 8192 UTF-8 bytes to the source URL; this is not a Happ client maximum. Longer sources return success: false with msg: happ_source_too_long and obj: null. The source URL is not sent to a generation provider, and the result is not stored or reused.",
+        "operationId": "post_panel_api_clients_happLink_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Stable client record ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/HappLinkResult"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "encryptedLink": "happ://crypt5/example"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/panel/api/clients/links/{email}": {
       "get": {
         "tags": [
           "Clients"
         ],
-        "summary": "Return every URL for one client across all attached inbounds — the same strings the Copy URL button copies in the panel UI. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria. If streamSettings.externalProxy is set, returns one URL per external proxy. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.",
+        "summary": "Return every URL for one client across all attached inbounds, one per advertised endpoint: the managed hosts of the inbound, else its streamSettings.externalProxy entries, else its own address. Supported protocols: vmess, vless, trojan, shadowsocks, hysteria, mtproto. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.",
         "operationId": "get_panel_api_clients_links_email",
         "parameters": [
           {
@@ -11944,6 +12482,40 @@
         }
       }
     },
+    "/panel/api/setting/testDiscord": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Test Discord bot connection by sending a test embed to the configured channel.",
+        "operationId": "post_panel_api_setting_testDiscord",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "msg": "Test notification sent successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/panel/api/setting/getDefaultJsonConfig": {
       "get": {
         "tags": [
@@ -13298,6 +13870,11 @@
                     "type": "string",
                     "description": "Prefix for generated outbound tags. Defaults to the lowest free \"sub<N>-\" prefix."
                   },
+                  "userAgent": {
+                    "type": "string",
+                    "default": "3x-ui-outbound-sub/1.0",
+                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"3x-ui-outbound-sub/1.0\"."
+                  },
                   "updateInterval": {
                     "type": "integer",
                     "default": 600,
@@ -13390,6 +13967,11 @@
                   "tagPrefix": {
                     "type": "string",
                     "description": "Prefix for generated outbound tags. Defaults to the lowest free \"sub<N>-\" prefix."
+                  },
+                  "userAgent": {
+                    "type": "string",
+                    "default": "3x-ui-outbound-sub/1.0",
+                    "description": "Custom User-Agent sent when fetching this subscription. Defaults to \"3x-ui-outbound-sub/1.0\"."
                   },
                   "updateInterval": {
                     "type": "integer",
@@ -13642,6 +14224,10 @@
                   "url": {
                     "type": "string",
                     "description": "Subscription URL to preview (required)."
+                  },
+                  "userAgent": {
+                    "type": "string",
+                    "description": "Custom User-Agent sent while fetching the preview."
                   },
                   "allowPrivate": {
                     "type": "boolean",
@@ -14162,6 +14748,99 @@
           },
           "500": {
             "description": "Subscription generation failed."
+          }
+        }
+      }
+    },
+    "/{subPath}{subid}/hwid-status": {
+      "get": {
+        "tags": [
+          "Subscription Server"
+        ],
+        "summary": "Return aggregate HWID device-slot usage for the subscription: whether an HWID limit is active, the limit, how many devices are registered and how many slots remain. Read-only — it never registers a device, so asking does not consume a slot. Counters only: no HWID value, email or device metadata. The path prefix is configured by subPath.",
+        "operationId": "get_subPath_subid_hwid_status",
+        "description": "Responds with the bare HwidSlotStatus object, not the <code>{success,msg,obj}</code> panel envelope, like the other subscription-server routes. With no HWID limit configured, <code>active</code> is false and every counter is 0.",
+        "parameters": [
+          {
+            "name": "subid",
+            "in": "path",
+            "required": true,
+            "description": "Client subscription ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subPath",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device-slot counters for the subscription.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "active": true,
+                  "full": false,
+                  "limit": 2,
+                  "registered": 1,
+                  "remaining": 1
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/HwidSlotStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No enabled client matches the subscription ID. Empty body."
+          },
+          "500": {
+            "description": "Database lookup failed. Empty body."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "Subscription Server"
+        ],
+        "summary": "Return the HWID device-slot status code and headers as GET without a response body.",
+        "operationId": "head_subPath_subid_hwid_status",
+        "parameters": [
+          {
+            "name": "subid",
+            "in": "path",
+            "required": true,
+            "description": "Client subscription ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subPath",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Headers match GET; no response body."
+          },
+          "404": {
+            "description": "No enabled client matches the subscription ID. Empty body."
+          },
+          "500": {
+            "description": "Database lookup failed. Empty body."
           }
         }
       }
