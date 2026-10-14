@@ -73,6 +73,14 @@ def prepare(source, control, tag, sha, repository):
             raise ValueError('Control directory escapes the source checkout')
         shutil.rmtree(source / '.noads')
     shutil.copytree(control / '.noads', source / '.noads', ignore=shutil.ignore_patterns('__pycache__'))
+    # These checks exclusively validate the upstream Claude bots and their CI
+    # documentation. Those workflows are replaced in this distribution.
+    bot_checks = source / 'bot_context_test.go'
+    if bot_checks.exists():
+        names = re.findall(r'^func (Test\w+)\(', bot_checks.read_text(encoding='utf-8'), flags=re.M)
+        if not names or any(not name.startswith(('TestAnalystContext', 'TestReview', 'TestBotPrompts')) for name in names):
+            raise ValueError('Upstream bot-check scope changed; review before archiving')
+        shutil.move(bot_checks, source / '.noads/upstream-bot-context_test.go.txt')
     for name in ('README.md', 'NOADS.md'):
         shutil.copy2(control / name, source / name)
     shutil.copy2(control / '.noads/tests/noads_routes_test.go', source / 'internal/web/controller/noads_routes_test.go')
