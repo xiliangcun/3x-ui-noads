@@ -84,7 +84,13 @@ for file in sorted(directory.iterdir()):
 remote = json.loads(gh('api', f'repos/{repo}/releases/tags/{tag}'))
 if {a['name'] for a in remote['assets']} != {p.name for p in directory.iterdir()}:
     raise ValueError('Uploaded draft is incomplete')
+subprocess.run(['git', 'config', 'credential.https://github.com.helper', '!gh auth git-credential'], check=True)
+# Only move main after all checks/builds and every draft upload passed. A
+# concurrent human change causes a normal fast-forward rejection, not overwrite.
+subprocess.run(['git', 'push', 'origin', f'{sha}:refs/heads/main'], check=True)
 published_versions = [version(r['tag_name']) for r in releases if not r['draft'] and not r['prerelease'] and re.fullmatch(r'v\d+\.\d+\.\d+', r['tag_name'])]
 latest = not published_versions or version(tag) >= max(published_versions)
 retry('release', 'edit', tag, '--repo', repo, '--draft=false', '--prerelease=false', '--latest=' + str(latest).lower(), '--notes-file', str(notes_file))
+pending_branch = f'noads/build-{tag}-{os.environ["GITHUB_RUN_ID"]}'
+subprocess.run(['gh', 'api', '--method', 'DELETE', f'repos/{repo}/git/refs/heads/{pending_branch}'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 print(f'Published complete immutable no-ads release {tag}: {len(list(directory.iterdir()))} assets.')

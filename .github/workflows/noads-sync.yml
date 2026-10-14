@@ -94,7 +94,8 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Release $UPSTREAM_TAG: synchronize official source without sponsor ads"
             git config credential.https://github.com.helper '!gh auth git-credential'
-            git push origin HEAD:refs/heads/main
+            # Keep default-branch installers on the last validated source.
+            git push origin "HEAD:refs/heads/noads/build-$UPSTREAM_TAG-$GITHUB_RUN_ID"
           fi
           printf 'source_sha=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
