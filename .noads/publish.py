@@ -81,7 +81,10 @@ if not existing:
 for file in sorted(directory.iterdir()):
     # A retry may continue an incomplete draft, but never a published release.
     retry('release', 'upload', tag, str(file), '--repo', repo, '--clobber')
-remote = json.loads(gh('api', f'repos/{repo}/releases/tags/{tag}'))
+# Draft releases have no published tag yet, so the tag endpoint returns 404.
+drafts = json.loads(gh('api', f'repos/{repo}/releases?per_page=100'))
+draft_id = next(r['id'] for r in drafts if r['tag_name'] == tag and r['draft'])
+remote = json.loads(gh('api', f'repos/{repo}/releases/{draft_id}'))
 if {a['name'] for a in remote['assets']} != {p.name for p in directory.iterdir()}:
     raise ValueError('Uploaded draft is incomplete')
 subprocess.run(['git', 'config', 'credential.https://github.com.helper', '!gh auth git-credential'], check=True)
