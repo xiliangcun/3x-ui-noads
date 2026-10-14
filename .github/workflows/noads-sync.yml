@@ -1,0 +1,172 @@
+name: Sync and publish stable no-ads releases
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      upstream_tag:
+        description: 'Optional official stable tag (blank checks pending releases)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noads-stable-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.select.outputs.changed }}
+      tag: ${{ steps.select.outputs.tag }}
+      source_sha: ${{ steps.commit.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Find pending official stable release
+        id: select
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_TAG: ${{ inputs.upstream_tag }}
+        run: python .noads/select-release.py
+      - name: Prepare reviewed no-ads source
+        if: steps.select.outputs.changed == 'true'
+        env:
+          UPSTREAM_TAG: ${{ steps.select.outputs.tag }}
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check PyYAML==6.0.3
+          git fetch --no-tags https://github.com/MHSanaei/3x-ui.git "refs/tags/$UPSTREAM_TAG"
+          upstream_sha="$(git rev-parse 'FETCH_HEAD^{commit}')"
+          git worktree add --detach "$RUNNER_TEMP/noads-source" "$upstream_sha"
+          cp "$RUNNER_TEMP/upstream-release.json" .noads/upstream-release.json
+          python .noads/prepare.py --source "$RUNNER_TEMP/noads-source" --control "$GITHUB_WORKSPACE" --tag "$UPSTREAM_TAG" --sha "$upstream_sha" --repository "$GITHUB_REPOSITORY"
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        if: steps.select.outputs.changed == 'true'
+        with:
+          go-version-file: ${{ runner.temp }}/noads-source/go.mod
+          cache-dependency-path: ${{ runner.temp }}/noads-source/go.sum
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        if: steps.select.outputs.changed == 'true'
+        with:
+          node-version-file: ${{ runner.temp }}/noads-source/.nvmrc
+      - name: Refresh generated schemas and API documentation
+        if: steps.select.outputs.changed == 'true'
+        working-directory: ${{ runner.temp }}/noads-source/frontend
+        run: |
+          set -euo pipefail
+          npm run gen
+          gofmt -w ../internal/web/controller/index.go ../internal/web/controller/noads_routes_test.go ../internal/web/routes_contract_test.go
+      - name: Check advertising and credential candidates
+        if: steps.select.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          python .noads/download-gitleaks.py
+          cd "$RUNNER_TEMP/noads-source"
+          /tmp/noads-gitleaks/gitleaks dir . --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/secret-scan.json" --exit-code 0
+          python "$GITHUB_WORKSPACE/.noads/check.py" --root "$RUNNER_TEMP/noads-source" --report "$RUNNER_TEMP/secret-scan.json"
+          git diff --check
+      - name: Commit synchronized source without replacing control workflows
+        id: commit
+        if: steps.select.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_TAG: ${{ steps.select.outputs.tag }}
+        run: |
+          set -euo pipefail
+          base_sha="$(git rev-parse HEAD)"
+          cd "$RUNNER_TEMP/noads-source"
+          git reset --soft "$base_sha"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --exit-code "$base_sha" -- .github/workflows
+          if ! git diff --cached --quiet; then
+            git commit -m "Release $UPSTREAM_TAG: synchronize official source without sponsor ads"
+            git config credential.https://github.com.helper '!gh auth git-credential'
+            git push origin HEAD:refs/heads/main
+          fi
+          printf 'source_sha=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  validate:
+    needs: prepare
+    if: needs.prepare.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version-file: go.mod
+      - name: Test stable-release selection rules
+        run: python .noads/test_control.py
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Frontend type checks, tests and production build
+        working-directory: frontend
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run typecheck
+          npm test
+          npm run build
+      - name: Verify compiled no-ads frontend
+        run: python .noads/check.py --built
+      - name: Go regression tests
+        run: |
+          set -euo pipefail
+          go list ./... | grep -v '/frontend/node_modules/' > "$RUNNER_TEMP/go-packages.txt"
+          go test -shuffle=on -count=1 -timeout=15m $(cat "$RUNNER_TEMP/go-packages.txt")
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: noads-frontend-dist
+          path: internal/web/dist/
+          include-hidden-files: true
+          retention-days: 7
+
+  build:
+    needs: [prepare, validate]
+    if: needs.prepare.outputs.changed == 'true'
+    uses: ./.github/workflows/noads-build.yml
+    with:
+      source_sha: ${{ needs.prepare.outputs.source_sha }}
+
+  publish:
+    needs: [prepare, validate, build]
+    if: needs.prepare.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          pattern: x-ui-*
+          path: release-artifacts
+          merge-multiple: true
+      - name: Verify complete assets and publish an immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          SOURCE_SHA: ${{ needs.prepare.outputs.source_sha }}
+        run: python .noads/publish.py

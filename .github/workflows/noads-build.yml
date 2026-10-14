@@ -1,0 +1,84 @@
+name: Build checked no-ads packages
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [amd64, arm64, armv7, armv6, '386', armv5, s390x]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version-file: go.mod
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: noads-frontend-dist
+          path: internal/web/dist/
+      - name: Build using this upstream release's official toolchain and dependencies
+        env:
+          NOADS_PLATFORM: ${{ matrix.platform }}
+        run: bash .noads/build/linux.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: x-ui-linux-${{ matrix.platform }}
+          path: |
+            x-ui-linux-${{ matrix.platform }}.tar.gz
+            x-ui-linux-${{ matrix.platform }}.tar.gz.sha256
+          retention-days: 7
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version-file: go.mod
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: noads-frontend-dist
+          path: internal/web/dist/
+      - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e # v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-sqlite3
+            mingw-w64-x86_64-pkg-config
+      - name: Build Windows panel
+        shell: msys2 {0}
+        run: bash .noads/build/windows.sh
+      - name: Package official dependencies and modification notice
+        shell: pwsh
+        run: ./.noads/build/windows-resources.ps1
+      - name: Zip and checksum
+        shell: pwsh
+        run: ./.noads/build/windows-package.ps1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: x-ui-windows-amd64
+          path: |
+            x-ui-windows-amd64.zip
+            x-ui-windows-amd64.zip.sha256
+          retention-days: 7

@@ -1,0 +1,452 @@
+[
+  {
+    "rule": "generic-api-key",
+    "file": "docs/content/docs/en/config/amneziawg.mdx",
+    "context_sha256": "39970b41b884e4e6f84204662197e569cb17e83d01948f30ae8517402874d910"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "docs/public/openapi.json",
+    "context_sha256": "d8842e42468f70b9e5f9fb409d78a269353a991d92586de64c4d2466081e4a87"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/public/openapi.json",
+    "context_sha256": "d8842e42468f70b9e5f9fb409d78a269353a991d92586de64c4d2466081e4a87"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/components/form/JsonEditor.stories.tsx",
+    "context_sha256": "0a35e6f9915545bb92137550579586d9b7902ce5af6fdd425bb3b12df20920e9"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/components/form/JsonEditor.stories.tsx",
+    "context_sha256": "5359b9077d579c700ebaaefcec9ea86c40164522151598b164c7f1d5f24fedd5"
+  },
+  {
+    "rule": "discord-client-id",
+    "file": "frontend/src/components/ui/notifications/DiscordNotifications.stories.tsx",
+    "context_sha256": "961098de72f0c5368038d2148d20691a4c876c449432198b3bb4ca8aa07f4246"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/generated/examples.ts",
+    "context_sha256": "bc3b45c4179b5cbfa7b19d306ce24789594209b3244eb70edbc2255083af0ccb"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/pages/api-docs/endpoints.ts",
+    "context_sha256": "99ad7004046a9c9e17e16ea81e4ef5ca4abaa7dc6c1e8e3bd9f5efe292773141"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/pages/inbounds/form/InboundFormModal.tsx",
+    "context_sha256": "bc7ccc8394d4245e56b1386b067cfa37707decc3a10088a33b3be86d0ed5ff5d"
+  },
+  {
+    "rule": "private-key",
+    "file": "frontend/src/pages/xray/outbounds/transport/masque.tsx",
+    "context_sha256": "6ce29f806ce6c69353e7018f2c6cdae1b30a5c69abcd23e888a3586f9c961d14"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-link.test.ts.snap",
+    "context_sha256": "8d13457a416a0c87da5e06aea9459bb5ca4c4942209d50e24401e192f9d5c76e"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/security.test.ts.snap",
+    "context_sha256": "c55a3103a9025a30babd7f94277e8e9d25cb21aaedd41a1ebc9ccb3a53ca3c15"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/protocols.test.ts.snap",
+    "context_sha256": "a135975c421af9b9b888462712c7bc9e8e60386932f1d8fb1581f6594257b07d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/protocols.test.ts.snap",
+    "context_sha256": "8b4970b34c14d818ab22dcac1123b912e4fa6c0f12d963603d0f56e061c42cbe"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/protocols.test.ts.snap",
+    "context_sha256": "34810785b81b6a5c11def5df9bf8e161b94000c226a10458b8faf72a7c980414"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/protocols.test.ts.snap",
+    "context_sha256": "bf845cd3cec168314bd44a22f81aef716aa414401fc7295fb660143b59f734aa"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/protocols.test.ts.snap",
+    "context_sha256": "300c24e5090b06309e36113f7f6a9b4b421e4ecf35ad9a00f819f7ae31ad4ecf"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-defaults.test.ts.snap",
+    "context_sha256": "0cabe56c3a9a45ad6aad52c1c4c447120205c5a360076a6e487a52f743a49134"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-defaults.test.ts.snap",
+    "context_sha256": "047f1fd533477a629b5628998e6144a8a16177f17fd9733fe7b5fec364087abd"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-full.test.ts.snap",
+    "context_sha256": "8b4970b34c14d818ab22dcac1123b912e4fa6c0f12d963603d0f56e061c42cbe"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-full.test.ts.snap",
+    "context_sha256": "264ef886141cc443abe6bd10130523b3c1b23a24cd9f8d538b38843af90eb97f"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-full.test.ts.snap",
+    "context_sha256": "6a409c080e163b1d292386fb2282d2ab60a3018445c512d6147719a134377cf1"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-full.test.ts.snap",
+    "context_sha256": "6c0fa310e79d7bdeedd168f43ada5a916a58aae378460d1927bc17029b37ef28"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/__snapshots__/inbound-full.test.ts.snap",
+    "context_sha256": "a6991969d5aa2baf2ba65f7b698316e7233bdde38f5b2f01d6881efaa122348d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/amneziawg-outbound-adapter.test.ts",
+    "context_sha256": "bf1be7a74ffae3b791272f55286d6b600d3824bdcf32a87e6bdd9df702d393d6"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound-full/shadowsocks-tcp-2022.json",
+    "context_sha256": "264ef886141cc443abe6bd10130523b3c1b23a24cd9f8d538b38843af90eb97f"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound-full/shadowsocks-tcp-2022.json",
+    "context_sha256": "8b4970b34c14d818ab22dcac1123b912e4fa6c0f12d963603d0f56e061c42cbe"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound-full/vless-tcp-reality.json",
+    "context_sha256": "6a409c080e163b1d292386fb2282d2ab60a3018445c512d6147719a134377cf1"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/mtproto-basic.json",
+    "context_sha256": "a135975c421af9b9b888462712c7bc9e8e60386932f1d8fb1581f6594257b07d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound-full/wireguard-server.json",
+    "context_sha256": "a6991969d5aa2baf2ba65f7b698316e7233bdde38f5b2f01d6881efaa122348d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound-full/wireguard-server.json",
+    "context_sha256": "6c0fa310e79d7bdeedd168f43ada5a916a58aae378460d1927bc17029b37ef28"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/shadowsocks-2022.json",
+    "context_sha256": "34810785b81b6a5c11def5df9bf8e161b94000c226a10458b8faf72a7c980414"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/shadowsocks-2022.json",
+    "context_sha256": "8b4970b34c14d818ab22dcac1123b912e4fa6c0f12d963603d0f56e061c42cbe"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/security/reality-basic.json",
+    "context_sha256": "c55a3103a9025a30babd7f94277e8e9d25cb21aaedd41a1ebc9ccb3a53ca3c15"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/wireguard-basic.json",
+    "context_sha256": "300c24e5090b06309e36113f7f6a9b4b421e4ecf35ad9a00f819f7ae31ad4ecf"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/wireguard-basic.json",
+    "context_sha256": "bf845cd3cec168314bd44a22f81aef716aa414401fc7295fb660143b59f734aa"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/golden/fixtures/inbound/mtproto-domain-fronting.json",
+    "context_sha256": "a135975c421af9b9b888462712c7bc9e8e60386932f1d8fb1581f6594257b07d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-defaults.test.ts",
+    "context_sha256": "75ffdafabffac2dde4ccf6514a3f50e78d434dcd66e191a73e865d810f3e6a99"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-defaults.test.ts",
+    "context_sha256": "6b07cb71bec47b17441ce2f8fda471a03afa8898aa3bca6f93614d9dc3414c5c"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-form-adapter.test.ts",
+    "context_sha256": "8c6a65a0941076a90266e6232a013eeecbb966fc48b39e3d28a21861d23af63d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-from-db.test.ts",
+    "context_sha256": "ad50b638cf5620bbf764bfac6ef46a81f1a44ef010483cfb5787dbbb54a2dbf0"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-from-db.test.ts",
+    "context_sha256": "c38b2187827a7fe501c4f37a36c222815d993831a924d9d88d5b1b3ce4a458d5"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/mtproto-clients-link.test.ts",
+    "context_sha256": "e63d245e058bb8d7ed8a08bbf9dd6da210ca6e1892ead291eecc4ad48254b37b"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/mtproto-clients-link.test.ts",
+    "context_sha256": "6d5d3b6b8032fd5fd93d601abdcc74925bbad2937a8856705deeba44c2d13a20"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-link.test.ts",
+    "context_sha256": "ac324f3fd7b1d2097209324afd7a54fd8bf559ab8dd99de9f30724873e5635e0"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-link.test.ts",
+    "context_sha256": "f0d08d82ba45c72ebacedb9e09a74cebc25073a84496316bf0c47cfa6938779a"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/inbound-link.test.ts",
+    "context_sha256": "b2ab3aa042c1d1855e5cc4463ee0c576298ef00b5e6f1fe7efcd4575bfccec08"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/outbound-defaults.test.ts",
+    "context_sha256": "e1b0ac5d81c3d9c3145f7ed453b3575913bd9fe65260954c17cb975ca64ff697"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/outbound-form-adapter.test.ts",
+    "context_sha256": "eb23794d2fe5828f6be2d0cf9dfa10abcf75ce5df64592c1beeb0df0e5ecd3f1"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/outbound-form-adapter.test.ts",
+    "context_sha256": "7d51cbb7f1aa571d97c0c6dc46e2f5ee26b6727c39bec94c49d430decfd868f0"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/amneziawgnet/client_device_test.go",
+    "context_sha256": "9f48f0a063ffd8565b30079eb34cf0ec22b864d8ccf5e4db3b0dcab41f2f9ade"
+  },
+  {
+    "rule": "private-key",
+    "file": "frontend/src/test/warp-masque-modal.test.tsx",
+    "context_sha256": "7a77e6e09291e5745715d06e900e7bca6177cd2700c1673132e4c76d89652e5e"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/tunnel-host-endpoints.test.ts",
+    "context_sha256": "46e1c33a1a54d9ea098cc1eab3a1fae6372eddb593774539a168a345de635958"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/tunnel-host-endpoints.test.ts",
+    "context_sha256": "b1ab3afe2af62b320505c30f0110c8331c95cd17cf5c9c75e55ac120baf3b75d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/vless-encryption.test.ts",
+    "context_sha256": "3bc82c5fe2e3db6211cbbe84e52e8852c1c54ab139cbd3bb81f1cff2f4b6b54a"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-clients-link.test.ts",
+    "context_sha256": "c926fc13fcf7a4e4ae17c3c1c6cfd0509d9eeb0fb9f2b74cae0efe8157216121"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-clients-link.test.ts",
+    "context_sha256": "ec4c0ba053cf860485ab32ba822d33ba21bac7dd5e2a4d09323c78aa699e793c"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-clients-link.test.ts",
+    "context_sha256": "54ff59d42cab8b485e5eab79c53b3e5a845b0f7c409096a60c36642cbc8f8514"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-clients-link.test.ts",
+    "context_sha256": "46e1c33a1a54d9ea098cc1eab3a1fae6372eddb593774539a168a345de635958"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-clients-link.test.ts",
+    "context_sha256": "b1ab3afe2af62b320505c30f0110c8331c95cd17cf5c9c75e55ac120baf3b75d"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-client-config.test.ts",
+    "context_sha256": "426f3a44356cd98b6e05aab78d1d43948e7cc983ef7468d309f04279108ed8ed"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "frontend/src/test/wireguard-client-config.test.ts",
+    "context_sha256": "6aed219ec3c3a1812ec6dd7e1d29fc1b11d71a8f967716a7211959b2da5591b5"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/database/wireguard_domain_strategy_migration_test.go",
+    "context_sha256": "ef33aa6e352c4a52fc9dd33911b72834d77b612b1620c563e145cce38245b3c2"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/database/model/model_wireguard_peers_test.go",
+    "context_sha256": "18adeb78d3abf2812a3bc2c967982985bb8257f44a6fc4dffd3e126acdddb598"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/database/wireguard_migration_test.go",
+    "context_sha256": "a5c56d1602d31b9a7b9382d37a54b8f07fe56885dcd8d1dd32bcbdce89c9b27c"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/database/model/model_wireguard_test.go",
+    "context_sha256": "f491a392778584218b85c060180ab93f04de603c67ffe23a2ed5281d26d57244"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/database/model/model_wireguard_test.go",
+    "context_sha256": "10217b734f08ac7b064d487462cab32e3c63a2e74e30ee2f1f45412b64643c63"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/amneziawg/params_test.go",
+    "context_sha256": "2812be63bd9fe58b6ef36ab29f732ee3e7fe10e104837580ef5dce0911e5c4b2"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/amneziawgnet/device_test.go",
+    "context_sha256": "ab1e19bb1ba9a9539e4135b3e1d755c0c8960eddd77af2f89e8e9e6ced9fd9de"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/sub/service_mtproto_test.go",
+    "context_sha256": "0db60979464600936453a890ceef3a95b4e53dd1007f1acbcfffa0c184ffb927"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/mtproto/manager_test.go",
+    "context_sha256": "e0b786363144c56f449da8e22b8bd4a534bf57f4a38a1a41a5e05be14a906d93"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/sub/controller_test.go",
+    "context_sha256": "f301cb8f44da9d96699b1567c41e8d87204dfbd1e539653484bfa36cbb3bcee5"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/sub/service_amneziawg_test.go",
+    "context_sha256": "f1d9d8c8503b7f17be32a385c051ccf0ab97c90ec853e696a1756660a2187749"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/sub/service_amneziawg_test.go",
+    "context_sha256": "f1c213b6b69201be344e27cc29a9fea9a43947b8b7e09695f28ed5707410711e"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/client_bulk_fanout_test.go",
+    "context_sha256": "5da8e3f52dca853ed03d0c273f4a7fe4237c9327cad66ee3b7cdd0418a7d9612"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/sub/clash_service_test.go",
+    "context_sha256": "b7408e00a964d83d453574dad85c3068771b09d8e46bd9e80b82daa5a79260b3"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/client_sync_mtproto_test.go",
+    "context_sha256": "5348da1577d57214c98b8c069df0ee4641fc28cc51265d8aa87a45631b3fc335"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/client_sync_mtproto_test.go",
+    "context_sha256": "b17a2897abe14680ce757d79ed43cb609c26dc7b918d3e12471958d226af6425"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_options_node_address_test.go",
+    "context_sha256": "4b707607eea3e551988623642f68ba1a03d2a28b35086b4e0a9f2ca24b4eb1e8"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/client_bulk_flow_test.go",
+    "context_sha256": "e0dce11afdf533dbec603d3cef449dc276110c0a8f5e01196702c08abc013632"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/client_bulk_flow_test.go",
+    "context_sha256": "a6f5829952a1eeca89afdf544f7b30c45d50aff127863057bc12e600f1109220"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_import_external_proxy_test.go",
+    "context_sha256": "c98bb1d6634356a3235b62d02c89a264676a4a7ebb5f8c39560ad96d73d5dcf5"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_import_external_proxy_test.go",
+    "context_sha256": "7eab8909a5c9eaa3e339847ff41d286a752468d327c8dae0226c58b0178a408f"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_import_external_proxy_test.go",
+    "context_sha256": "6a64780e2f6186639b14dfde9875a96a9a5c5d3021a3dfbba2c7048069cb8c9b"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_node_protocol_update_test.go",
+    "context_sha256": "6a063d5fa71f04f5cb706352631f58e98870ff0a8105603ddbe75e12aa979538"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_node_protocol_update_test.go",
+    "context_sha256": "05f93002310db01a76c1031f9a6d44bf2b361635abc1beed2cc136a2494ad25f"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_node_sidecar_test.go",
+    "context_sha256": "e9a9fe0f9301b7b5c2adc8d54e861a0bc0dc63e182353f013723610dd511ab5b"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/inbound_amneziawg_test.go",
+    "context_sha256": "1f7422881aeed92b480eb5943d56818ff68294c5319395f5be1a91a97d574738"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/web/service/mtproto_fake_test.go",
+    "context_sha256": "8b0431d1d34250bf8a44ea1c55ec7624d27e54ac81e1cd6e07b4d17256e28246"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/xray/outbound_validation_test.go",
+    "context_sha256": "e80b4a5c8d98b1172c1addfdd364dd879b25edf51185ed76621d0bcc5fc2c3e9"
+  }
+]
