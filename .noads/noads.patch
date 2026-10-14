@@ -1501,10 +1501,18 @@ index 2184911..0000000
 -  });
 -});
 diff --git a/internal/web/controller/index.go b/internal/web/controller/index.go
-index faf13bc..d6b34ce 100644
+index faf13bc..a5ad9af 100644
 --- a/internal/web/controller/index.go
 +++ b/internal/web/controller/index.go
-@@ -29,7 +29,6 @@ type IndexController struct {
+@@ -6,7 +6,6 @@ import (
+ 	"time"
+ 
+ 	"github.com/mhsanaei/3x-ui/v3/internal/logger"
+-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
+ 	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
+ 	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+ 	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
+@@ -29,7 +28,6 @@ type IndexController struct {
  
  	settingService service.SettingService
  	userService    panel.UserService
@@ -1512,7 +1520,7 @@ index faf13bc..d6b34ce 100644
  	tgbot          tgbot.Tgbot
  }
  
-@@ -44,36 +43,12 @@ func NewIndexController(g *gin.RouterGroup) *IndexController {
+@@ -44,36 +42,12 @@ func NewIndexController(g *gin.RouterGroup) *IndexController {
  func (a *IndexController) initRouter(g *gin.RouterGroup) {
  	g.GET("/", a.index)
  	g.GET("/csrf-token", a.csrfToken)
