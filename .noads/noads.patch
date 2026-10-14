@@ -2167,3 +2167,523 @@ index b2d244c..0000000
 -		t.Fatalf("remote hits = %d, want 0 in debug mode", n)
 -	}
 -}
+diff --git a/internal/web/translation/ar-EG.json b/internal/web/translation/ar-EG.json
+index ccf5c6c..47885d9 100644
+--- a/internal/web/translation/ar-EG.json
++++ b/internal/web/translation/ar-EG.json
+@@ -120,7 +120,6 @@
+     "outbounds": "الصادرات",
+     "apiDocs": "توثيق API",
+     "donate": "تبرع",
+-    "sponsors": "الرعاة",
+     "hosts": "المضيفات",
+     "docs": "التوثيق",
+     "openMenu": "فتح القائمة",
+@@ -2415,27 +2414,6 @@
+         "badTag": "وسم غير صالح",
+         "badVlessRoute": "أدخل رقماً واحداً بين 0 و65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "الرعاة",
+-      "intro": "شركات تدعم تطوير 3X-UI. تُفتح روابط الرعاة في علامة تبويب جديدة.",
+-      "become": "كن راعيًا",
+-      "tag": "راعٍ",
+-      "visit": "زيارة",
+-      "yourBrand": "علامتك التجارية هنا",
+-      "yourBrandText": "ضع شركتك أمام آلاف مسؤولي الخوادم الذين يفتحون 3X-UI كل يوم.",
+-      "placements": "المواضع المتاحة",
+-      "placementDashboard": "لافتة لوحة المعلومات",
+-      "placementDashboardDesc": "موضع مميز أعلى لوحة المعلومات، راعٍ واحد في كل مرة.",
+-      "placementSidebar": "بطاقة الشريط الجانبي",
+-      "placementSidebarDesc": "تظهر في كل صفحات اللوحة وتتناوب بين الرعاة.",
+-      "placementLogin": "صفحة تسجيل الدخول",
+-      "placementLoginDesc": "يراها المسؤول عند كل تسجيل دخول.",
+-      "placementPage": "صفحة الرعاة",
+-      "placementPageDesc": "مدرجة هنا مع الشعار والوصف والرابط.",
+-      "available": "متاح",
+-      "takenUntil": "محجوز حتى {date}",
+-      "activeCount": "{count} نشط"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/en-US.json b/internal/web/translation/en-US.json
+index 1e36a4f..05d421d 100644
+--- a/internal/web/translation/en-US.json
++++ b/internal/web/translation/en-US.json
+@@ -121,7 +121,6 @@
+     "outbounds": "Outbounds",
+     "apiDocs": "API Docs",
+     "donate": "Donate",
+-    "sponsors": "Sponsors",
+     "docs": "Documentation",
+     "openMenu": "Open menu",
+     "pinSidebar": "Pin sidebar",
+@@ -2415,27 +2414,6 @@
+       "routingScript": "Routing Script",
+       "routingScriptDesc": "Path to a .lua file defining HandleRoute, absolute or relative to the Xray bin folder. The script then picks every route and Xray ignores all routing rules, the panel's api rule included: send the api inbound to the api outbound or traffic stats and live client changes stop. Xray will not start if the file is missing or invalid.",
+       "routingScriptActive": "A routing script is set under {section}, so Xray ignores these rules."
+-    },
+-    "sponsors": {
+-      "title": "Sponsors",
+-      "intro": "Companies that support 3X-UI development. Sponsored links open in a new tab.",
+-      "become": "Become a sponsor",
+-      "tag": "Sponsor",
+-      "visit": "Visit",
+-      "yourBrand": "Your brand here",
+-      "yourBrandText": "Put your company in front of thousands of server admins who open 3X-UI every day.",
+-      "placements": "Available placements",
+-      "placementDashboard": "Overview banner",
+-      "placementDashboardDesc": "Premium spot at the top of the dashboard, one sponsor at a time.",
+-      "placementSidebar": "Sidebar card",
+-      "placementSidebarDesc": "Shown on every panel page, rotating between sponsors.",
+-      "placementLogin": "Login page",
+-      "placementLoginDesc": "Seen by the admin at every sign-in.",
+-      "placementPage": "Sponsors page",
+-      "placementPageDesc": "Listed here with logo, description and link.",
+-      "available": "Available",
+-      "takenUntil": "Taken until {date}",
+-      "activeCount": "{count} active"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/es-ES.json b/internal/web/translation/es-ES.json
+index a7ecf70..bc51980 100644
+--- a/internal/web/translation/es-ES.json
++++ b/internal/web/translation/es-ES.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Salidas",
+     "apiDocs": "Documentación de la API",
+     "donate": "Donar",
+-    "sponsors": "Patrocinadores",
+     "hosts": "Hosts",
+     "docs": "Documentación",
+     "openMenu": "Abrir menú",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Etiqueta no válida",
+         "badVlessRoute": "Introduce un único número entre 0 y 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Patrocinadores",
+-      "intro": "Empresas que apoyan el desarrollo de 3X-UI. Los enlaces patrocinados se abren en una pestaña nueva.",
+-      "become": "Hazte patrocinador",
+-      "tag": "Patrocinador",
+-      "visit": "Visitar",
+-      "yourBrand": "Tu marca aquí",
+-      "yourBrandText": "Muestra tu empresa a miles de administradores de servidores que abren 3X-UI cada día.",
+-      "placements": "Espacios disponibles",
+-      "placementDashboard": "Banner del panel",
+-      "placementDashboardDesc": "Espacio premium en la parte superior del panel, un patrocinador a la vez.",
+-      "placementSidebar": "Tarjeta lateral",
+-      "placementSidebarDesc": "Se muestra en todas las páginas del panel, rotando entre patrocinadores.",
+-      "placementLogin": "Página de inicio de sesión",
+-      "placementLoginDesc": "La ve el administrador en cada inicio de sesión.",
+-      "placementPage": "Página de patrocinadores",
+-      "placementPageDesc": "Aparece aquí con logo, descripción y enlace.",
+-      "available": "Disponible",
+-      "takenUntil": "Ocupado hasta {date}",
+-      "activeCount": "{count} activos"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/fa-IR.json b/internal/web/translation/fa-IR.json
+index da42d96..a43bf96 100644
+--- a/internal/web/translation/fa-IR.json
++++ b/internal/web/translation/fa-IR.json
+@@ -120,7 +120,6 @@
+     "outbounds": "خروجی‌ها",
+     "apiDocs": "مستندات API",
+     "donate": "حمایت مالی",
+-    "sponsors": "اسپانسرها",
+     "hosts": "میزبان‌ها",
+     "docs": "مستندات",
+     "openMenu": "باز کردن منو",
+@@ -2415,27 +2414,6 @@
+         "badTag": "برچسب نامعتبر",
+         "badVlessRoute": "یک عدد بین 0 تا 65535 وارد کنید"
+       }
+-    },
+-    "sponsors": {
+-      "title": "اسپانسرها",
+-      "intro": "شرکت‌هایی که از توسعه‌ی 3X-UI حمایت می‌کنند. لینک‌های اسپانسر در تب جدید باز می‌شوند.",
+-      "become": "اسپانسر شوید",
+-      "tag": "اسپانسر",
+-      "visit": "مشاهده",
+-      "yourBrand": "جای برند شما",
+-      "yourBrandText": "شرکت خود را جلوی چشم هزاران ادمین سروری بگذارید که هر روز 3X-UI را باز می‌کنند.",
+-      "placements": "جایگاه‌های موجود",
+-      "placementDashboard": "بنر داشبورد",
+-      "placementDashboardDesc": "جایگاه ویژه بالای صفحه‌ی داشبورد، هر بار فقط یک اسپانسر.",
+-      "placementSidebar": "کارت سایدبار",
+-      "placementSidebarDesc": "در همه‌ی صفحات پنل نمایش داده می‌شود و بین اسپانسرها چرخش دارد.",
+-      "placementLogin": "صفحه‌ی ورود",
+-      "placementLoginDesc": "ادمین در هر بار ورود آن را می‌بیند.",
+-      "placementPage": "صفحه‌ی اسپانسرها",
+-      "placementPageDesc": "همراه با لوگو، توضیحات و لینک در همین صفحه.",
+-      "available": "خالی",
+-      "takenUntil": "پر شده تا {date}",
+-      "activeCount": "{count} فعال"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/id-ID.json b/internal/web/translation/id-ID.json
+index 0240541..bbae4bd 100644
+--- a/internal/web/translation/id-ID.json
++++ b/internal/web/translation/id-ID.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Outbound",
+     "apiDocs": "Dokumentasi API",
+     "donate": "Donasi",
+-    "sponsors": "Sponsor",
+     "hosts": "Host",
+     "docs": "Dokumentasi",
+     "openMenu": "Buka menu",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Tag tidak valid",
+         "badVlessRoute": "Masukkan satu angka antara 0 dan 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Sponsor",
+-      "intro": "Perusahaan yang mendukung pengembangan 3X-UI. Tautan sponsor dibuka di tab baru.",
+-      "become": "Jadi sponsor",
+-      "tag": "Sponsor",
+-      "visit": "Kunjungi",
+-      "yourBrand": "Merek Anda di sini",
+-      "yourBrandText": "Tampilkan perusahaan Anda kepada ribuan admin server yang membuka 3X-UI setiap hari.",
+-      "placements": "Slot yang tersedia",
+-      "placementDashboard": "Banner dasbor",
+-      "placementDashboardDesc": "Tempat premium di atas dasbor, satu sponsor dalam satu waktu.",
+-      "placementSidebar": "Kartu sidebar",
+-      "placementSidebarDesc": "Tampil di setiap halaman panel, bergantian antar sponsor.",
+-      "placementLogin": "Halaman login",
+-      "placementLoginDesc": "Dilihat admin setiap kali masuk.",
+-      "placementPage": "Halaman sponsor",
+-      "placementPageDesc": "Tercantum di sini dengan logo, deskripsi, dan tautan.",
+-      "available": "Tersedia",
+-      "takenUntil": "Terisi hingga {date}",
+-      "activeCount": "{count} aktif"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/ja-JP.json b/internal/web/translation/ja-JP.json
+index 2ad0a2f..eb0797c 100644
+--- a/internal/web/translation/ja-JP.json
++++ b/internal/web/translation/ja-JP.json
+@@ -120,7 +120,6 @@
+     "outbounds": "アウトバウンド",
+     "apiDocs": "API ドキュメント",
+     "donate": "寄付",
+-    "sponsors": "スポンサー",
+     "hosts": "ホスト",
+     "docs": "ドキュメント",
+     "openMenu": "メニューを開く",
+@@ -2415,27 +2414,6 @@
+         "badTag": "無効なタグ",
+         "badVlessRoute": "0〜65535 の単一の数値を入力してください"
+       }
+-    },
+-    "sponsors": {
+-      "title": "スポンサー",
+-      "intro": "3X-UI の開発を支援している企業です。スポンサーリンクは新しいタブで開きます。",
+-      "become": "スポンサーになる",
+-      "tag": "スポンサー",
+-      "visit": "訪問",
+-      "yourBrand": "ここにあなたのブランドを",
+-      "yourBrandText": "毎日 3X-UI を開く何千人ものサーバー管理者に御社をアピールできます。",
+-      "placements": "掲載枠",
+-      "placementDashboard": "ダッシュボードバナー",
+-      "placementDashboardDesc": "ダッシュボード上部のプレミアム枠。一度に 1 社のみ。",
+-      "placementSidebar": "サイドバーカード",
+-      "placementSidebarDesc": "パネルの全ページに表示され、スポンサー間でローテーションします。",
+-      "placementLogin": "ログインページ",
+-      "placementLoginDesc": "管理者がログインするたびに表示されます。",
+-      "placementPage": "スポンサーページ",
+-      "placementPageDesc": "ロゴ、説明、リンク付きでここに掲載されます。",
+-      "available": "空きあり",
+-      "takenUntil": "{date} まで予約済み",
+-      "activeCount": "{count} 件掲載中"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/pt-BR.json b/internal/web/translation/pt-BR.json
+index e62c853..066038f 100644
+--- a/internal/web/translation/pt-BR.json
++++ b/internal/web/translation/pt-BR.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Saídas",
+     "apiDocs": "Documentação da API",
+     "donate": "Doar",
+-    "sponsors": "Patrocinadores",
+     "hosts": "Hosts",
+     "docs": "Documentação",
+     "openMenu": "Abrir menu",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Tag inválida",
+         "badVlessRoute": "Insira um único número entre 0 e 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Patrocinadores",
+-      "intro": "Empresas que apoiam o desenvolvimento do 3X-UI. Links patrocinados abrem em uma nova aba.",
+-      "become": "Seja um patrocinador",
+-      "tag": "Patrocinador",
+-      "visit": "Visitar",
+-      "yourBrand": "Sua marca aqui",
+-      "yourBrandText": "Coloque sua empresa diante de milhares de administradores de servidores que abrem o 3X-UI todos os dias.",
+-      "placements": "Espaços disponíveis",
+-      "placementDashboard": "Banner do painel",
+-      "placementDashboardDesc": "Espaço premium no topo do painel, um patrocinador por vez.",
+-      "placementSidebar": "Cartão lateral",
+-      "placementSidebarDesc": "Exibido em todas as páginas do painel, alternando entre patrocinadores.",
+-      "placementLogin": "Página de login",
+-      "placementLoginDesc": "Visto pelo administrador a cada login.",
+-      "placementPage": "Página de patrocinadores",
+-      "placementPageDesc": "Listado aqui com logo, descrição e link.",
+-      "available": "Disponível",
+-      "takenUntil": "Ocupado até {date}",
+-      "activeCount": "{count} ativos"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/ru-RU.json b/internal/web/translation/ru-RU.json
+index b8b4029..e68cd0d 100644
+--- a/internal/web/translation/ru-RU.json
++++ b/internal/web/translation/ru-RU.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Исходящие",
+     "apiDocs": "Документация API",
+     "donate": "Поддержать",
+-    "sponsors": "Спонсоры",
+     "hosts": "Хосты",
+     "docs": "Документация",
+     "openMenu": "Открыть меню",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Недопустимый тег",
+         "badVlessRoute": "Введите одно число от 0 до 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Спонсоры",
+-      "intro": "Компании, поддерживающие разработку 3X-UI. Спонсорские ссылки открываются в новой вкладке.",
+-      "become": "Стать спонсором",
+-      "tag": "Спонсор",
+-      "visit": "Перейти",
+-      "yourBrand": "Здесь может быть ваш бренд",
+-      "yourBrandText": "Покажите свою компанию тысячам администраторов серверов, которые каждый день открывают 3X-UI.",
+-      "placements": "Доступные места",
+-      "placementDashboard": "Баннер на главной",
+-      "placementDashboardDesc": "Премиум-место вверху панели, один спонсор за раз.",
+-      "placementSidebar": "Карточка в боковой панели",
+-      "placementSidebarDesc": "Показывается на всех страницах панели, спонсоры чередуются.",
+-      "placementLogin": "Страница входа",
+-      "placementLoginDesc": "Администратор видит её при каждом входе.",
+-      "placementPage": "Страница спонсоров",
+-      "placementPageDesc": "Размещение здесь с логотипом, описанием и ссылкой.",
+-      "available": "Свободно",
+-      "takenUntil": "Занято до {date}",
+-      "activeCount": "Активных: {count}"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/tr-TR.json b/internal/web/translation/tr-TR.json
+index 1d487bc..afcbbcb 100644
+--- a/internal/web/translation/tr-TR.json
++++ b/internal/web/translation/tr-TR.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Giden Bağlantılar",
+     "apiDocs": "API Belgeleri",
+     "donate": "Bağış Yap",
+-    "sponsors": "Sponsorlar",
+     "hosts": "Host'lar",
+     "docs": "Belgeler",
+     "openMenu": "Menüyü aç",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Geçersiz etiket",
+         "badVlessRoute": "0 ile 65535 arasında tek bir sayı girin"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Sponsorlar",
+-      "intro": "3X-UI geliştirmesini destekleyen şirketler. Sponsor bağlantıları yeni sekmede açılır.",
+-      "become": "Sponsor ol",
+-      "tag": "Sponsor",
+-      "visit": "Ziyaret et",
+-      "yourBrand": "Markanız burada",
+-      "yourBrandText": "Şirketinizi her gün 3X-UI açan binlerce sunucu yöneticisinin önüne çıkarın.",
+-      "placements": "Mevcut yerleşimler",
+-      "placementDashboard": "Genel bakış afişi",
+-      "placementDashboardDesc": "Panonun üstünde premium alan, aynı anda tek sponsor.",
+-      "placementSidebar": "Kenar çubuğu kartı",
+-      "placementSidebarDesc": "Tüm panel sayfalarında gösterilir, sponsorlar arasında döner.",
+-      "placementLogin": "Giriş sayfası",
+-      "placementLoginDesc": "Yönetici her girişte görür.",
+-      "placementPage": "Sponsorlar sayfası",
+-      "placementPageDesc": "Logo, açıklama ve bağlantıyla burada listelenir.",
+-      "available": "Müsait",
+-      "takenUntil": "{date} tarihine kadar dolu",
+-      "activeCount": "{count} aktif"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/uk-UA.json b/internal/web/translation/uk-UA.json
+index 991e112..ec09ac7 100644
+--- a/internal/web/translation/uk-UA.json
++++ b/internal/web/translation/uk-UA.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Вихідні",
+     "apiDocs": "Документація API",
+     "donate": "Підтримати",
+-    "sponsors": "Спонсори",
+     "hosts": "Хости",
+     "docs": "Документація",
+     "openMenu": "Відкрити меню",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Недійсний тег",
+         "badVlessRoute": "Введіть одне число від 0 до 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Спонсори",
+-      "intro": "Компанії, що підтримують розробку 3X-UI. Спонсорські посилання відкриваються в новій вкладці.",
+-      "become": "Стати спонсором",
+-      "tag": "Спонсор",
+-      "visit": "Перейти",
+-      "yourBrand": "Тут може бути ваш бренд",
+-      "yourBrandText": "Покажіть свою компанію тисячам адміністраторів серверів, які щодня відкривають 3X-UI.",
+-      "placements": "Доступні місця",
+-      "placementDashboard": "Банер на головній",
+-      "placementDashboardDesc": "Преміум-місце вгорі панелі, один спонсор за раз.",
+-      "placementSidebar": "Картка в бічній панелі",
+-      "placementSidebarDesc": "Показується на всіх сторінках панелі, спонсори чергуються.",
+-      "placementLogin": "Сторінка входу",
+-      "placementLoginDesc": "Адміністратор бачить її під час кожного входу.",
+-      "placementPage": "Сторінка спонсорів",
+-      "placementPageDesc": "Розміщення тут із логотипом, описом і посиланням.",
+-      "available": "Вільно",
+-      "takenUntil": "Зайнято до {date}",
+-      "activeCount": "Активних: {count}"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/vi-VN.json b/internal/web/translation/vi-VN.json
+index 6df8d3a..d9ff5fa 100644
+--- a/internal/web/translation/vi-VN.json
++++ b/internal/web/translation/vi-VN.json
+@@ -120,7 +120,6 @@
+     "outbounds": "Outbound",
+     "apiDocs": "Tài liệu API",
+     "donate": "Quyên góp",
+-    "sponsors": "Nhà tài trợ",
+     "hosts": "Hosts",
+     "docs": "Tài liệu",
+     "openMenu": "Mở menu",
+@@ -2415,27 +2414,6 @@
+         "badTag": "Tag không hợp lệ",
+         "badVlessRoute": "Nhập một số duy nhất từ 0 đến 65535"
+       }
+-    },
+-    "sponsors": {
+-      "title": "Nhà tài trợ",
+-      "intro": "Các công ty hỗ trợ phát triển 3X-UI. Liên kết tài trợ mở trong tab mới.",
+-      "become": "Trở thành nhà tài trợ",
+-      "tag": "Tài trợ",
+-      "visit": "Truy cập",
+-      "yourBrand": "Thương hiệu của bạn ở đây",
+-      "yourBrandText": "Đưa công ty bạn đến hàng nghìn quản trị viên máy chủ mở 3X-UI mỗi ngày.",
+-      "placements": "Vị trí hiện có",
+-      "placementDashboard": "Banner tổng quan",
+-      "placementDashboardDesc": "Vị trí cao cấp ở đầu bảng điều khiển, mỗi lần một nhà tài trợ.",
+-      "placementSidebar": "Thẻ thanh bên",
+-      "placementSidebarDesc": "Hiển thị trên mọi trang của panel, luân phiên giữa các nhà tài trợ.",
+-      "placementLogin": "Trang đăng nhập",
+-      "placementLoginDesc": "Quản trị viên thấy mỗi lần đăng nhập.",
+-      "placementPage": "Trang nhà tài trợ",
+-      "placementPageDesc": "Được liệt kê tại đây với logo, mô tả và liên kết.",
+-      "available": "Còn trống",
+-      "takenUntil": "Đã đặt đến {date}",
+-      "activeCount": "{count} đang hoạt động"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/zh-CN.json b/internal/web/translation/zh-CN.json
+index a083b48..1dbac04 100644
+--- a/internal/web/translation/zh-CN.json
++++ b/internal/web/translation/zh-CN.json
+@@ -120,7 +120,6 @@
+     "outbounds": "出站",
+     "apiDocs": "API 文档",
+     "donate": "捐赠",
+-    "sponsors": "赞助商",
+     "hosts": "主机",
+     "docs": "文档",
+     "openMenu": "打开菜单",
+@@ -2415,27 +2414,6 @@
+         "badTag": "无效的标签",
+         "badVlessRoute": "请输入 0 到 65535 之间的单个数字"
+       }
+-    },
+-    "sponsors": {
+-      "title": "赞助商",
+-      "intro": "支持 3X-UI 开发的公司。赞助链接将在新标签页中打开。",
+-      "become": "成为赞助商",
+-      "tag": "赞助",
+-      "visit": "访问",
+-      "yourBrand": "您的品牌展示位",
+-      "yourBrandText": "让每天打开 3X-UI 的数千名服务器管理员看到您的公司。",
+-      "placements": "可用展示位",
+-      "placementDashboard": "概览横幅",
+-      "placementDashboardDesc": "仪表盘顶部的高级位置，每次仅一家赞助商。",
+-      "placementSidebar": "侧边栏卡片",
+-      "placementSidebarDesc": "在面板所有页面显示，并在赞助商之间轮换。",
+-      "placementLogin": "登录页",
+-      "placementLoginDesc": "管理员每次登录时都能看到。",
+-      "placementPage": "赞助商页面",
+-      "placementPageDesc": "在此页面展示徽标、简介和链接。",
+-      "available": "可预订",
+-      "takenUntil": "已预订至 {date}",
+-      "activeCount": "{count} 个进行中"
+     }
+   },
+   "tgbot": {
+diff --git a/internal/web/translation/zh-TW.json b/internal/web/translation/zh-TW.json
+index 7a22cbc..b74bc46 100644
+--- a/internal/web/translation/zh-TW.json
++++ b/internal/web/translation/zh-TW.json
+@@ -120,7 +120,6 @@
+     "outbounds": "出站",
+     "apiDocs": "API 文件",
+     "donate": "捐贈",
+-    "sponsors": "贊助商",
+     "hosts": "主機",
+     "docs": "文件",
+     "openMenu": "開啟選單",
+@@ -2415,27 +2414,6 @@
+         "badTag": "無效的標籤",
+         "badVlessRoute": "請輸入 0 到 65535 之間的單一數字"
+       }
+-    },
+-    "sponsors": {
+-      "title": "贊助商",
+-      "intro": "支持 3X-UI 開發的公司。贊助連結將在新分頁中開啟。",
+-      "become": "成為贊助商",
+-      "tag": "贊助",
+-      "visit": "造訪",
+-      "yourBrand": "您的品牌展示位",
+-      "yourBrandText": "讓每天打開 3X-UI 的數千名伺服器管理員看到您的公司。",
+-      "placements": "可用展示位",
+-      "placementDashboard": "總覽橫幅",
+-      "placementDashboardDesc": "儀表板頂部的高級位置，每次僅一家贊助商。",
+-      "placementSidebar": "側邊欄卡片",
+-      "placementSidebarDesc": "在面板所有頁面顯示，並在贊助商之間輪換。",
+-      "placementLogin": "登入頁",
+-      "placementLoginDesc": "管理員每次登入時都能看到。",
+-      "placementPage": "贊助商頁面",
+-      "placementPageDesc": "在此頁面展示標誌、簡介與連結。",
+-      "available": "可預訂",
+-      "takenUntil": "已預訂至 {date}",
+-      "activeCount": "{count} 個進行中"
+     }
+   },
+   "tgbot": {
