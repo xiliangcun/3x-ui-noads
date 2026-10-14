@@ -3,6 +3,6 @@
   "upstream_tag": "v3.10.0",
   "upstream_commit": "74c3cc38821cabd66ad316ea562851422d0b0063",
   "downstream_repository": "xinian5216/3x-ui-private",
-  "patch_sha256": "aa6901cd1a25695e620b5be657f814f9873bafaf09dbc771f2d0782a65ef88fa",
+  "patch_sha256": "c1015d47f6329f09be9ab56953432793b544459da95180444570dcace82608d2",
   "variant": "noads"
 }
