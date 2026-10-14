@@ -8,6 +8,8 @@ import subprocess
 from pathlib import Path
 
 import yaml
+from clean_docs import clean_docs
+from preserve import preserve_control, verify_control
 
 def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
@@ -63,16 +65,7 @@ def prepare(source, control, tag, sha, repository):
             text = re.sub(pattern, lambda m: f'https://{host}/{repository}', text, flags=re.I)
         file.write_text(text, encoding='utf-8', newline='\n')
 
-    # Upstream workflows never replace the fork's trusted control workflows.
-    if not (source / '.github/workflows').resolve().is_relative_to(source):
-        raise ValueError('Workflow directory escapes the source checkout')
-    shutil.rmtree(source / '.github/workflows')
-    shutil.copytree(control / '.github/workflows', source / '.github/workflows')
-    if (source / '.noads').exists():
-        if not (source / '.noads').resolve().is_relative_to(source):
-            raise ValueError('Control directory escapes the source checkout')
-        shutil.rmtree(source / '.noads')
-    shutil.copytree(control / '.noads', source / '.noads', ignore=shutil.ignore_patterns('__pycache__'))
+    preserve_control(source, control)
     # These checks exclusively validate the upstream Claude bots and their CI
     # documentation. Those workflows are replaced in this distribution.
     bot_checks = source / 'bot_context_test.go'
@@ -81,8 +74,7 @@ def prepare(source, control, tag, sha, repository):
         if not names or any(not name.startswith(('TestAnalystContext', 'TestReview', 'TestBotPrompts')) for name in names):
             raise ValueError('Upstream bot-check scope changed; review before archiving')
         shutil.move(bot_checks, source / '.noads/upstream-bot-context_test.go.txt')
-    for name in ('README.md', 'NOADS.md'):
-        shutil.copy2(control / name, source / name)
+    clean_docs(source)
     shutil.copy2(control / '.noads/tests/noads_routes_test.go', source / 'internal/web/controller/noads_routes_test.go')
     attributes = source / '.gitattributes'
     existing = attributes.read_text(encoding='utf-8') if attributes.exists() else ''
@@ -105,7 +97,7 @@ def prepare(source, control, tag, sha, repository):
     (build_dir / 'windows.sh').write_text('#!/usr/bin/env bash\nset -euo pipefail\n' + windows, encoding='utf-8', newline='\n')
     (build_dir / 'windows-resources.ps1').write_text('$ErrorActionPreference="Stop"\n' + windows_resources + '\nCopy-Item LICENSE, NOADS.md, .noads/provenance.json x-ui/\n', encoding='utf-8', newline='\n')
     (build_dir / 'windows-package.ps1').write_text('$ErrorActionPreference="Stop"\n' + windows_package, encoding='utf-8', newline='\n')
-    # Remove dormant sponsor schema definitions until codegen refreshes all generated files.
+    verify_control(source, control)
     print(f'Prepared {tag} ({sha[:12]}); official builds retained for all eight platforms.')
 
 if __name__ == '__main__':

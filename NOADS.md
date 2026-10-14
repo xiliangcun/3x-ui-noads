@@ -15,3 +15,9 @@ The panel version remains the upstream version for compatibility. This notice an
 
 Source: https://github.com/xinian5216/3x-ui-private
 Original project: https://github.com/MHSanaei/3x-ui
+
+## Maintenance rules and documentation
+
+Every stable synchronization restores downstream `AGENTS.md`, `README.md`, `NOADS.md`, `.noads/` and `.github/workflows/` from the current downstream main branch. Their retained contents are compared byte for byte before publication. Upstream workflows and agent instructions cannot replace downstream maintenance rules.
+
+Promotional sponsorship/donation sections in tracked Markdown READMEs (including translations and nested READMEs) and GitHub FUNDING configuration are removed on every sync. Attribution, licenses, technical documentation and normal community integrations remain. Unrecognized inline promotional links stop publication for review. Future changes outside recognized patterns require maintenance; these rules do not promise to recognize every possible future advertisement.

@@ -4,6 +4,8 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from clean_docs import check_docs
+from preserve import verify_control
 
 def finding_key(root, finding):
     name = finding['File'].replace('\\', '/')
@@ -22,8 +24,13 @@ def finding_key(root, finding):
     context = '\n'.join(lines[finding['StartLine'] - 1:finding['EndLine']])
     return {'rule': finding['RuleID'], 'file': p.as_posix(), 'context_sha256': hashlib.sha256(context.encode()).hexdigest()}
 
-def check(root, report=None, built=False):
+def check(root, report=None, built=False, control=None):
     root = root.resolve()
+    check_docs(root)
+    if not (root / 'AGENTS.md').is_file():
+        raise ValueError('Downstream AGENTS.md is missing')
+    if control:
+        verify_control(root, control.resolve())
     for name in ('frontend/src/components/sponsor', 'frontend/src/pages/sponsors',
                  'frontend/src/api/queries/useSponsorsQuery.ts', 'internal/web/service/panel/sponsor.go'):
         if (root / name).exists():
@@ -71,5 +78,6 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=Path, default=Path.cwd())
     parser.add_argument('--report', type=Path)
     parser.add_argument('--built', action='store_true')
+    parser.add_argument('--control', type=Path)
     args = parser.parse_args()
-    check(args.root, args.report, args.built)
+    check(args.root, args.report, args.built, args.control)

@@ -33,6 +33,10 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: false
+      - name: Test maintenance protection and README cleanup rules
+        run: |
+          python -m unittest discover -s .noads -p 'test_*.py'
+          python .noads/check.py
       - name: Find pending official stable release
         id: select
         env:
@@ -74,7 +78,7 @@ jobs:
           python .noads/download-gitleaks.py
           cd "$RUNNER_TEMP/noads-source"
           /tmp/noads-gitleaks/gitleaks dir . --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/secret-scan.json" --exit-code 0
-          python "$GITHUB_WORKSPACE/.noads/check.py" --root "$RUNNER_TEMP/noads-source" --report "$RUNNER_TEMP/secret-scan.json"
+          python "$GITHUB_WORKSPACE/.noads/check.py" --root "$RUNNER_TEMP/noads-source" --control "$GITHUB_WORKSPACE" --report "$RUNNER_TEMP/secret-scan.json"
           git diff --check
       - name: Commit synchronized source without replacing control workflows
         id: commit
@@ -112,8 +116,8 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version-file: go.mod
-      - name: Test stable-release selection rules
-        run: python .noads/test_control.py
+      - name: Test release selection and downstream maintenance rules
+        run: python -m unittest discover -s .noads -p 'test_*.py'
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .nvmrc

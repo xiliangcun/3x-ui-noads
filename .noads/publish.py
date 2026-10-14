@@ -7,6 +7,7 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from clean_docs import clean_text
 
 def gh(*args):
     return subprocess.check_output(['gh', *args], text=True)
@@ -49,6 +50,7 @@ for name in expected:
 (directory / 'provenance.json').write_text(json.dumps({**provenance, 'source_commit': sha}, indent=2) + '\n')
 
 upstream = json.loads(Path('.noads/upstream-release.json').read_text())
+upstream_notes = clean_text(upstream.get('body') or '')
 notes = f'''Unofficial no-ads build of [{tag}]({upstream['html_url']}).
 
 Removed the Sponsors menu/page, overview/sidebar/login paid placements and remote sponsor-list/logo endpoints. Installation and panel/CLI updates follow this repository. Original GPL-3.0 license and attribution are retained.
@@ -61,7 +63,7 @@ All advertising/credential checks, frontend/Go regression tests and all eight pl
 
 ### Upstream release notes
 
-{upstream.get('body') or ''}
+{upstream_notes}
 '''
 notes_file = Path(os.environ['RUNNER_TEMP']) / 'noads-release-notes.md'
 notes_file.write_text(notes, encoding='utf-8')
