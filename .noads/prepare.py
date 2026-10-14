@@ -106,6 +106,6 @@ if __name__ == '__main__':
     parser.add_argument('--control', type=Path, required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--sha', required=True)
-    parser.add_argument('--repository', default='xinian5216/3x-ui-private')
+    parser.add_argument('--repository', default='xinian5216/3x-ui-noads')
     args = parser.parse_args()
     prepare(args.source, args.control, args.tag, args.sha, args.repository)

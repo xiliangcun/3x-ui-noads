@@ -7,13 +7,13 @@
 ## 安装与更新
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/xinian5216/3x-ui-private/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/xinian5216/3x-ui-noads/main/install.sh)
 ```
 
 现有面板迁移前请备份数据库和设置。使用上述安装器更新后，面板更新和 `x-ui` 更新菜单均跟随本仓库。Release 的版本号与上游保持一致，发布标题和随包 `NOADS.md` 标明修改版。不要切换到 Dev 更新通道：此仓库仅发布正式版本。
 
-- [下载经过检查的安装包](https://github.com/xinian5216/3x-ui-private/releases/latest)
-- [自动同步与构建状态](https://github.com/xinian5216/3x-ui-private/actions/workflows/noads-sync.yml)
+- [下载经过检查的安装包](https://github.com/xinian5216/3x-ui-noads/releases/latest)
+- [自动同步与构建状态](https://github.com/xinian5216/3x-ui-noads/actions/workflows/noads-sync.yml)
 - [上游使用文档](https://docs.sanaei.dev)
 
 ## 自动维护

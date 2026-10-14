@@ -2,7 +2,7 @@
   "upstream_repository": "MHSanaei/3x-ui",
   "upstream_tag": "v3.10.0",
   "upstream_commit": "74c3cc38821cabd66ad316ea562851422d0b0063",
-  "downstream_repository": "xinian5216/3x-ui-private",
+  "downstream_repository": "xinian5216/3x-ui-noads",
   "patch_sha256": "6779f8980a700c60dd6821d48755ac8124adbf8aea253e33defc9e3947b5dabf",
   "variant": "noads"
 }
