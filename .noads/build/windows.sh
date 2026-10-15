@@ -11,6 +11,11 @@ which go
 go version
 gcc --version
 
+# Version info + manifest resource: a bare stripped Go exe scores high on AV heuristics.
+PANEL_VERSION=$(tr -d '[:space:]' < internal/config/version)
+go run github.com/tc-hib/go-winres@v0.3.3 make --arch amd64 \
+  --product-version "$PANEL_VERSION" --file-version "$PANEL_VERSION"
+
 # Stamp the commit into per-commit (dev channel) builds only.
 LDFLAGS="-w -s"
 if false; then

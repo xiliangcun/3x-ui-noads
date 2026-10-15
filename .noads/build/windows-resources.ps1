@@ -1,7 +1,7 @@
 $ErrorActionPreference="Stop"
 $retry = @{ MaximumRetryCount = 5; RetryIntervalSec = 10 }
 mkdir x-ui
-Copy-Item xui-release.exe x-ui\x-ui.exe
+Copy-Item xui-release.exe x-ui\3x-ui.exe
 mkdir x-ui\bin
 cd x-ui\bin
 
