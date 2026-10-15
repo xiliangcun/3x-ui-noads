@@ -448,5 +448,20 @@
     "rule": "generic-api-key",
     "file": "internal/xray/outbound_validation_test.go",
     "context_sha256": "e80b4a5c8d98b1172c1addfdd364dd879b25edf51185ed76621d0bcc5fc2c3e9"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/xray/hot_diff_test.go",
+    "context_sha256": "fc2131856cda332a055dd4b00a96537b18ec509df0855646ca2a97cfed9e43e9"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/xray/hot_diff_test.go",
+    "context_sha256": "5007bfad1ff124e15f19652dde1fc0c23bc198513e5c5f5bd4e2fed1178db646"
+  },
+  {
+    "rule": "generic-api-key",
+    "file": "internal/xray/hot_diff_test.go",
+    "context_sha256": "1204bca7f3908425d952adb329e1b5b04a4bc2e86693a9d30eef8cf6b3f2e7e1"
   }
 ]
