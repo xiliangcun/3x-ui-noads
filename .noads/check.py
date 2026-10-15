@@ -31,6 +31,23 @@ def check(root, report=None, built=False, control=None):
         raise ValueError('Downstream AGENTS.md is missing')
     if control:
         verify_control(root, control.resolve())
+    provenance = json.loads((root / '.noads/provenance.json').read_text(encoding='utf-8'))
+    # Already-published v3.10.0 remains valid while the revised release is prepared.
+    transform_hash = provenance.get('source_transform_sha256')
+    if transform_hash:
+        transform = root / '.noads/strip_sponsors.py'
+        if hashlib.sha256(transform.read_bytes()).hexdigest() != transform_hash:
+            raise ValueError('Advertising transform does not match source provenance')
+        for file in (root / 'frontend/src').rglob('*'):
+            if file.suffix not in ('.ts', '.tsx') or 'generated' in file.parts:
+                continue
+            text = file.read_text(encoding='utf-8')
+            if re.search(r'SponsorSlot|SponsorsPage|DonateButton|menu\.(?:sponsors|donate)|[\'"]/sponsors|(?:sponsors|donate)\.sanaei\.dev', text):
+                raise ValueError('Advertising integration remains: ' + str(file.relative_to(root)))
+        for file in (root / 'internal/web/translation').glob('*.json'):
+            data = json.loads(file.read_text(encoding='utf-8'))
+            if any(k in data.get('menu', {}) for k in ('sponsors', 'donate')) or 'sponsors' in data.get('pages', {}):
+                raise ValueError('Advertising translation keys remain: ' + file.name)
     for name in ('frontend/src/components/sponsor', 'frontend/src/pages/sponsors',
                  'frontend/src/api/queries/useSponsorsQuery.ts', 'internal/web/service/panel/sponsor.go'):
         if (root / name).exists():
@@ -65,7 +82,7 @@ def check(root, report=None, built=False, control=None):
             raise ValueError('Compiled panel/login pages are missing')
         for file in dist.rglob('*.js'):
             text = file.read_text(encoding='utf-8')
-            if 'sponsors.sanaei.dev' in text or re.search(r'[\'"]/sponsors(?:/logo)?[\'"]', text):
+            if re.search(r'(?:sponsors|donate)\.sanaei\.dev', text) or re.search(r'[\'"]/sponsors(?:/logo)?[\'"]', text):
                 raise ValueError('Advertising request remains in compiled JavaScript: ' + file.name)
         spec = json.loads((dist / 'openapi.json').read_text())
         if '/sponsors' in spec.get('paths', {}):

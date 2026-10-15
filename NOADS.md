@@ -18,6 +18,8 @@ Original project: https://github.com/MHSanaei/3x-ui
 
 ## Maintenance rules and documentation
 
+For v3.10.2 and later synchronizations, dedicated sponsor modules and sponsor translation/API schema entries are removed structurally, while shared application integrations retain guarded patch checks. The sponsor navigation command and donation buttons are also removed. Unknown shared-code layouts still stop publication. Protocol adTag settings and new upstream protocol/security options remain intact.
+
 Every stable synchronization restores downstream `AGENTS.md`, `README.md`, `NOADS.md`, `.noads/` and `.github/workflows/` from the current downstream main branch. Their retained contents are compared byte for byte before publication. Upstream workflows and agent instructions cannot replace downstream maintenance rules.
 
 Promotional sponsorship/donation sections in tracked Markdown READMEs (including translations and nested READMEs) and GitHub FUNDING configuration are removed on every sync. Attribution, licenses, technical documentation and normal community integrations remain. Unrecognized inline promotional links stop publication for review. Future changes outside recognized patterns require maintenance; these rules do not promise to recognize every possible future advertisement.

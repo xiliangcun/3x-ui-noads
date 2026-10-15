@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 from clean_docs import clean_docs
 from preserve import preserve_control, verify_control
+from strip_sponsors import strip_sponsors
 
 def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
@@ -57,6 +58,7 @@ def prepare(source, control, tag, sha, repository):
     patch = control / '.noads/noads.patch'
     subprocess.run(['git', '-C', str(source), 'apply', '--check', str(patch)], check=True)
     subprocess.run(['git', '-C', str(source), 'apply', str(patch)], check=True)
+    strip_sponsors(source)
     for name in ('install.sh', 'update.sh', 'x-ui.sh', 'internal/web/service/panel/panel.go'):
         file = source / name
         text = file.read_text(encoding='utf-8')
@@ -87,6 +89,7 @@ def prepare(source, control, tag, sha, repository):
         'upstream_commit': sha,
         'downstream_repository': repository,
         'patch_sha256': hashlib.sha256(patch.read_bytes()).hexdigest(),
+        'source_transform_sha256': hashlib.sha256((control / '.noads/strip_sponsors.py').read_bytes()).hexdigest(),
         'variant': 'noads',
     }
     (source / '.noads/provenance.json').write_text(json.dumps(provenance, indent=2) + '\n', encoding='utf-8')
