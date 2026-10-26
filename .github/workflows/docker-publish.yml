@@ -1,0 +1,242 @@
+name: Publish No Ads Docker Image
+
+run-name: 发布 No Ads Docker 镜像 ${{ inputs.tag }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "要构建的本仓库 No Ads 正式 Release 标签，例如 v3.10.2"
+        required: true
+        type: string
+      force:
+        description: "即使 GHCR 已有同版本镜像，也强制重新构建"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: docker-noads-${{ inputs.tag }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  resolve:
+    name: 验证 Release 和镜像状态
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.resolve.outputs.should_build }}
+      release_tag: ${{ steps.resolve.outputs.release_tag }}
+      version: ${{ steps.resolve.outputs.version }}
+      source_sha: ${{ steps.resolve.outputs.source_sha }}
+      image_name: ${{ steps.resolve.outputs.image_name }}
+      reason: ${{ steps.resolve.outputs.reason }}
+
+    steps:
+      - name: 解析版本与提交
+        id: resolve
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          FORCE_INPUT: ${{ inputs.force }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: |
+          set -Eeuo pipefail
+
+          if [[ ! "${RELEASE_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([._+-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::无效标签：${RELEASE_TAG}。正确示例：v3.10.2"
+            exit 1
+          fi
+
+          release_json="$(gh api "/repos/${REPOSITORY}/releases/tags/${RELEASE_TAG}")"
+          if [[ "$(jq -r '.draft' <<<"${release_json}")" == "true" ]]; then
+            echo "::error::Release ${RELEASE_TAG} 仍是草稿"
+            exit 1
+          fi
+          if [[ "$(jq -r '.prerelease' <<<"${release_json}")" == "true" ]]; then
+            echo "::error::Release ${RELEASE_TAG} 是预发布版本"
+            exit 1
+          fi
+
+          ref_json="$(gh api "/repos/${REPOSITORY}/git/ref/tags/${RELEASE_TAG}")"
+          object_type="$(jq -r '.object.type' <<<"${ref_json}")"
+          object_sha="$(jq -r '.object.sha' <<<"${ref_json}")"
+          if [[ "${object_type}" == "tag" ]]; then
+            tag_json="$(gh api "/repos/${REPOSITORY}/git/tags/${object_sha}")"
+            source_sha="$(jq -r '.object.sha' <<<"${tag_json}")"
+          else
+            source_sha="${object_sha}"
+          fi
+
+          version="${RELEASE_TAG#v}"
+          image_name="ghcr.io/$(printf '%s' "${REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          should_build=true
+          reason="准备构建 ${RELEASE_TAG}"
+
+          case "${FORCE_INPUT:-false}" in
+            true|TRUE|True|1|yes|YES|Yes) force=true ;;
+            *) force=false ;;
+          esac
+
+          if [[ "${force}" != "true" ]]; then
+            package_name="${REPOSITORY#*/}"
+            if versions_json="$(gh api --paginate "/users/${REPOSITORY_OWNER}/packages/container/${package_name}/versions?per_page=100" 2>/dev/null)"; then
+              if jq -e --arg t "${RELEASE_TAG}" --arg v "${version}" '
+                any(.[]; ((.metadata.container.tags // []) | index($t)) != null or ((.metadata.container.tags // []) | index($v)) != null)
+              ' <<<"${versions_json}" >/dev/null; then
+                should_build=false
+                reason="GHCR 已有 ${RELEASE_TAG}，未启用强制重建"
+              fi
+            fi
+          fi
+
+          {
+            echo "should_build=${should_build}"
+            echo "release_tag=${RELEASE_TAG}"
+            echo "version=${version}"
+            echo "source_sha=${source_sha}"
+            echo "image_name=${image_name}"
+            echo "reason=${reason}"
+          } >>"${GITHUB_OUTPUT}"
+
+  build:
+    name: 构建并推送多架构镜像
+    needs: resolve
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: 签出 No Ads Release 源码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.release_tag }}
+          fetch-depth: 1
+          submodules: recursive
+          persist-credentials: false
+
+      - name: 验证提交和 Docker 文件
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ needs.resolve.outputs.source_sha }}
+        run: |
+          set -Eeuo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          [[ "${actual_sha}" == "${EXPECTED_SHA}" ]] || {
+            echo "::error::标签提交不一致。预期 ${EXPECTED_SHA}，实际 ${actual_sha}"
+            exit 1
+          }
+
+          for file in Dockerfile DockerEntrypoint.sh DockerInit.sh go.mod main.go; do
+            [[ -f "${file}" ]] || {
+              echo "::error::缺少 Docker 构建文件：${file}"
+              exit 1
+            }
+          done
+
+      - name: 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 登录 GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: 生成 OCI 元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ needs.resolve.outputs.image_name }}
+          tags: |
+            type=raw,value=${{ needs.resolve.outputs.release_tag }}
+            type=raw,value=${{ needs.resolve.outputs.version }}
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.title=3x-ui No Ads
+            org.opencontainers.image.description=Unofficial no-ads build of 3x-ui
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.resolve.outputs.version }}
+            org.opencontainers.image.revision=${{ needs.resolve.outputs.source_sha }}
+            org.opencontainers.image.licenses=GPL-3.0
+
+      - name: 构建并推送镜像
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          pull: true
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6,linux/386
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=3x-ui-noads-docker
+          cache-to: type=gha,mode=max,scope=3x-ui-noads-docker
+
+      - name: 验证远程多架构清单
+        shell: bash
+        env:
+          IMAGE_NAME: ${{ needs.resolve.outputs.image_name }}
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+        run: |
+          set -Eeuo pipefail
+          image_ref="${IMAGE_NAME}:${RELEASE_TAG}"
+          docker buildx imagetools inspect "${image_ref}" >manifest.txt
+
+          for platform in linux/amd64 linux/arm64 linux/arm/v7 linux/arm/v6 linux/386; do
+            grep -Fq "${platform}" manifest.txt || {
+              echo "::error::远程镜像清单缺少 ${platform}"
+              cat manifest.txt
+              exit 1
+            }
+          done
+
+      - name: 输出发布摘要
+        shell: bash
+        env:
+          IMAGE_NAME: ${{ needs.resolve.outputs.image_name }}
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+        run: |
+          {
+            echo "## Docker 镜像发布完成"
+            echo
+            echo "- 镜像：\`${IMAGE_NAME}:${RELEASE_TAG}\`"
+            echo "- latest：\`${IMAGE_NAME}:latest\`"
+            echo "- 摘要：\`${DIGEST}\`"
+            echo
+            echo '```bash'
+            echo "docker pull ${IMAGE_NAME}:${RELEASE_TAG}"
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+  skipped:
+    name: 镜像已经存在
+    needs: resolve
+    if: needs.resolve.outputs.should_build != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 输出跳过原因
+        run: |
+          echo "## 未重复构建" >>"${GITHUB_STEP_SUMMARY}"
+          echo "${{ needs.resolve.outputs.reason }}" >>"${GITHUB_STEP_SUMMARY}"

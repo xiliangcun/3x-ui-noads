@@ -1,0 +1,341 @@
+name: No Ads Unified Release and Docker
+
+run-name: >-
+  No Ads + Docker
+  ${{ inputs.upstream_tag || '自动检查' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_tag:
+        description: "自定义官方稳定版标签，例如 v3.10.2；留空则让原 No Ads 工作流检查待发布版本"
+        required: false
+        type: string
+      force_noads:
+        description: "即使本仓库已有同版本正式 Release，也重新运行原 No Ads 工作流"
+        required: false
+        default: false
+        type: boolean
+      force_docker:
+        description: "即使 GHCR 已有同版本镜像，也强制重新构建"
+        required: false
+        default: false
+        type: boolean
+
+  workflow_run:
+    workflows:
+      - "Sync and publish stable no-ads releases"
+    types:
+      - completed
+
+permissions:
+  actions: write
+  contents: read
+  packages: read
+
+concurrency:
+  group: noads-unified-${{ inputs.upstream_tag || github.event.workflow_run.id || github.run_id }}
+  cancel-in-progress: false
+
+env:
+  ORIGINAL_NOADS_WORKFLOW: noads-sync.yml
+  DOCKER_WORKFLOW: docker-publish.yml
+
+jobs:
+  orchestrate:
+    name: 统一调度 No Ads Release 和 Docker
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: 校验输入并确定目标版本
+        id: prepare
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.upstream_tag }}
+          FORCE_NOADS_INPUT: ${{ inputs.force_noads }}
+          FORCE_DOCKER_INPUT: ${{ inputs.force_docker }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          UPSTREAM_REPOSITORY: MHSanaei/3x-ui
+          UPSTREAM_RUN_STARTED_AT: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          set -Eeuo pipefail
+
+          bool() {
+            case "${1:-}" in
+              true|TRUE|True|1|yes|YES|Yes) printf '%s' true ;;
+              *) printf '%s' false ;;
+            esac
+          }
+
+          force_noads="$(bool "${FORCE_NOADS_INPUT:-false}")"
+          force_docker="$(bool "${FORCE_DOCKER_INPUT:-false}")"
+          requested_tag="${INPUT_TAG:-}"
+          release_before=""
+          mode="${EVENT_NAME}"
+
+          if [[ -n "${requested_tag}" ]] && [[ ! "${requested_tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([._+-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::版本标签格式不正确：${requested_tag}。正确示例：v3.10.2"
+            exit 1
+          fi
+
+          if [[ -n "${requested_tag}" ]]; then
+            if ! gh api "/repos/${UPSTREAM_REPOSITORY}/releases/tags/${requested_tag}" >/dev/null; then
+              echo "::error::官方上游不存在正式 Release：${requested_tag}"
+              exit 1
+            fi
+          fi
+
+          if gh api "/repos/${REPOSITORY}/releases/latest" >/tmp/release-before.json 2>/dev/null; then
+            release_before="$(jq -r '.tag_name // empty' /tmp/release-before.json)"
+          fi
+
+          {
+            echo "requested_tag=${requested_tag}"
+            echo "force_noads=${force_noads}"
+            echo "force_docker=${force_docker}"
+            echo "release_before=${release_before}"
+            echo "mode=${mode}"
+            echo "default_branch=${DEFAULT_BRANCH:-main}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: 判断是否需要运行原 No Ads 工作流
+        id: decide_noads
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          REQUESTED_TAG: ${{ steps.prepare.outputs.requested_tag }}
+          FORCE_NOADS: ${{ steps.prepare.outputs.force_noads }}
+        run: |
+          set -Eeuo pipefail
+
+          run_noads=true
+          reason=""
+
+          if [[ -n "${REQUESTED_TAG}" ]] && [[ "${FORCE_NOADS}" != "true" ]]; then
+            if release_json="$(gh api "/repos/${REPOSITORY}/releases/tags/${REQUESTED_TAG}" 2>/dev/null)"; then
+              draft="$(jq -r '.draft' <<<"${release_json}")"
+              prerelease="$(jq -r '.prerelease' <<<"${release_json}")"
+              if [[ "${draft}" == "false" && "${prerelease}" == "false" ]]; then
+                run_noads=false
+                reason="本仓库已存在正式 Release ${REQUESTED_TAG}，直接进入 Docker 构建"
+              fi
+            fi
+          fi
+
+          if [[ -z "${REQUESTED_TAG}" ]]; then
+            reason="未指定版本，调用原 No Ads 工作流自动检查待发布版本"
+          elif [[ "${run_noads}" == "true" ]]; then
+            reason="需要由原 No Ads 工作流生成 ${REQUESTED_TAG}"
+          fi
+
+          {
+            echo "run_noads=${run_noads}"
+            echo "reason=${reason}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: 调用原 No Ads 工作流
+        id: dispatch_noads
+        if: github.event_name == 'workflow_dispatch' && steps.decide_noads.outputs.run_noads == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ steps.prepare.outputs.default_branch }}
+          REQUESTED_TAG: ${{ steps.prepare.outputs.requested_tag }}
+          ORIGINAL_NOADS_WORKFLOW: ${{ env.ORIGINAL_NOADS_WORKFLOW }}
+        run: |
+          set -Eeuo pipefail
+
+          dispatched_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          args=(
+            workflow run "${ORIGINAL_NOADS_WORKFLOW}"
+            --repo "${REPOSITORY}"
+            --ref "${DEFAULT_BRANCH}"
+          )
+
+          if [[ -n "${REQUESTED_TAG}" ]]; then
+            args+=( -f "upstream_tag=${REQUESTED_TAG}" )
+          fi
+
+          gh "${args[@]}"
+          echo "dispatched_at=${dispatched_at}" >>"${GITHUB_OUTPUT}"
+
+      - name: 等待原 No Ads 工作流完成
+        id: wait_noads
+        if: github.event_name == 'workflow_dispatch' && steps.decide_noads.outputs.run_noads == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ steps.prepare.outputs.default_branch }}
+          DISPATCHED_AT: ${{ steps.dispatch_noads.outputs.dispatched_at }}
+          ORIGINAL_NOADS_WORKFLOW: ${{ env.ORIGINAL_NOADS_WORKFLOW }}
+        run: |
+          set -Eeuo pipefail
+
+          run_id=""
+          for _ in $(seq 1 30); do
+            run_id="$(
+              gh run list \
+                --repo "${REPOSITORY}" \
+                --workflow "${ORIGINAL_NOADS_WORKFLOW}" \
+                --branch "${DEFAULT_BRANCH}" \
+                --event workflow_dispatch \
+                --limit 20 \
+                --json databaseId,createdAt \
+                --jq ".[] | select(.createdAt >= \"${DISPATCHED_AT}\") | .databaseId" |
+              head -n 1
+            )"
+            [[ -n "${run_id}" ]] && break
+            sleep 5
+          done
+
+          if [[ -z "${run_id}" ]]; then
+            echo "::error::已触发原 No Ads 工作流，但未找到对应运行记录"
+            exit 1
+          fi
+
+          echo "原 No Ads 工作流运行编号：${run_id}"
+          gh run watch "${run_id}" --repo "${REPOSITORY}" --exit-status
+          echo "run_id=${run_id}" >>"${GITHUB_OUTPUT}"
+
+      - name: 确定本次正式 Release 标签
+        id: release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          REQUESTED_TAG: ${{ steps.prepare.outputs.requested_tag }}
+          RELEASE_BEFORE: ${{ steps.prepare.outputs.release_before }}
+          WORKFLOW_RUN_STARTED_AT: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          set -Eeuo pipefail
+
+          release_tag="${REQUESTED_TAG}"
+
+          if [[ -n "${release_tag}" ]]; then
+            release_json="$(gh api "/repos/${REPOSITORY}/releases/tags/${release_tag}")"
+          else
+            release_json="$(gh api "/repos/${REPOSITORY}/releases/latest")"
+            release_tag="$(jq -r '.tag_name // empty' <<<"${release_json}")"
+          fi
+
+          if [[ -z "${release_tag}" ]]; then
+            echo "::error::原 No Ads 工作流完成后仍未找到正式 Release"
+            exit 1
+          fi
+
+          draft="$(jq -r '.draft' <<<"${release_json}")"
+          prerelease="$(jq -r '.prerelease' <<<"${release_json}")"
+          published_at="$(jq -r '.published_at // empty' <<<"${release_json}")"
+
+          if [[ "${draft}" == "true" || "${prerelease}" == "true" || -z "${published_at}" ]]; then
+            echo "::error::Release ${release_tag} 不是已公开的正式版本"
+            exit 1
+          fi
+
+          if [[ "${EVENT_NAME}" == "workflow_run" ]]; then
+            release_epoch="$(date -u -d "${published_at}" +%s)"
+            workflow_epoch="$(date -u -d "${WORKFLOW_RUN_STARTED_AT}" +%s)"
+            if (( release_epoch < workflow_epoch )); then
+              echo "skip=true" >>"${GITHUB_OUTPUT}"
+              echo "release_tag=${release_tag}" >>"${GITHUB_OUTPUT}"
+              echo "原 No Ads 工作流本次没有发布新 Release，跳过 Docker。"
+              exit 0
+            fi
+          fi
+
+          echo "skip=false" >>"${GITHUB_OUTPUT}"
+          echo "release_tag=${release_tag}" >>"${GITHUB_OUTPUT}"
+
+      - name: 调用 Docker 发布工作流
+        id: dispatch_docker
+        if: steps.release.outputs.skip == 'false'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ steps.prepare.outputs.default_branch }}
+          RELEASE_TAG: ${{ steps.release.outputs.release_tag }}
+          FORCE_DOCKER: ${{ steps.prepare.outputs.force_docker }}
+          DOCKER_WORKFLOW: ${{ env.DOCKER_WORKFLOW }}
+        run: |
+          set -Eeuo pipefail
+
+          dispatched_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run "${DOCKER_WORKFLOW}" \
+            --repo "${REPOSITORY}" \
+            --ref "${DEFAULT_BRANCH}" \
+            -f "tag=${RELEASE_TAG}" \
+            -f "force=${FORCE_DOCKER}"
+
+          echo "dispatched_at=${dispatched_at}" >>"${GITHUB_OUTPUT}"
+
+      - name: 等待 Docker 发布完成
+        if: github.event_name == 'workflow_dispatch' && steps.release.outputs.skip == 'false'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ steps.prepare.outputs.default_branch }}
+          DISPATCHED_AT: ${{ steps.dispatch_docker.outputs.dispatched_at }}
+          DOCKER_WORKFLOW: ${{ env.DOCKER_WORKFLOW }}
+        run: |
+          set -Eeuo pipefail
+
+          run_id=""
+          for _ in $(seq 1 30); do
+            run_id="$(
+              gh run list \
+                --repo "${REPOSITORY}" \
+                --workflow "${DOCKER_WORKFLOW}" \
+                --branch "${DEFAULT_BRANCH}" \
+                --event workflow_dispatch \
+                --limit 20 \
+                --json databaseId,createdAt \
+                --jq ".[] | select(.createdAt >= \"${DISPATCHED_AT}\") | .databaseId" |
+              head -n 1
+            )"
+            [[ -n "${run_id}" ]] && break
+            sleep 5
+          done
+
+          if [[ -z "${run_id}" ]]; then
+            echo "::error::已触发 Docker 工作流，但未找到对应运行记录"
+            exit 1
+          fi
+
+          echo "Docker 工作流运行编号：${run_id}"
+          gh run watch "${run_id}" --repo "${REPOSITORY}" --exit-status
+
+      - name: 输出统一流程摘要
+        if: always()
+        shell: bash
+        env:
+          REQUESTED_TAG: ${{ steps.prepare.outputs.requested_tag }}
+          RELEASE_TAG: ${{ steps.release.outputs.release_tag }}
+          SKIPPED: ${{ steps.release.outputs.skip }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          {
+            echo "## No Ads + Docker 统一流程"
+            echo
+            echo "- 自定义版本：\`${REQUESTED_TAG:-自动检查}\`"
+            echo "- 实际 Release：\`${RELEASE_TAG:-未确定}\`"
+            echo "- Docker 跳过：\`${SKIPPED:-false}\`"
+            if [[ -n "${RELEASE_TAG:-}" && "${SKIPPED:-false}" != "true" ]]; then
+              image="ghcr.io/$(printf '%s' "${REPOSITORY}" | tr '[:upper:]' '[:lower:]'):${RELEASE_TAG}"
+              echo "- Docker 镜像：\`${image}\`"
+            fi
+          } >>"${GITHUB_STEP_SUMMARY}"
